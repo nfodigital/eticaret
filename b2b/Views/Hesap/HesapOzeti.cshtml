@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "HesapOzeti";
+    Layout = "~/Views/_Master.cshtml";
+}
+@model B2B.Dto.HesapOzetiDto
+<!-- Page-Title -->
+
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box widget-inline">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-primary md md-add-shopping-cart"></i><b> 15</b></h3>
+                        <h4 class="text-muted">toplam sipariş</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-custom md md-account-balance-wallet"></i><b> @string.Format("{0:C}", Model.SiparislerToplamTutar)</b></h3>
+                        <h4 class="text-muted">şimdiye dek siparişler tutarı</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-pink md md md-warning"></i><b> @string.Format("{0:C}", Model.BakiyeTutar)</b></h3>
+                        <h4 class="text-muted">Bakiye</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center b-0">
+                        <h3><i class="text-purple md md-visibility"></i><b> 12589</b></h3>
+                        <h4 class="text-muted">Bu ayki toplam ziyaretiniz</h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    if (Model.VadeTarihiHatirlatici != null)
+    {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-border panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Hatırlatma</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                Değerli müşterimiz <strong>'@Model.VadeTarihiHatirlatici.VadeTarihi.ToShortDateString()'</strong> tarihli vade günü için öngörülen ödeme tutarınızın <span class="text-danger"><b>@string.Format("{0:C}", @Model.VadeTarihiHatirlatici.OngorulenMiktar)</b></span> olduğunu belirtmek isteriz.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    }
+<!-- Page-Title -->
+    }
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-actions-bar dataTable table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>İşlem</th>
+                            <th>İşlem Tarihi</th>
+                            <th>İşlem Açıklaması</th>
+                            <th>Durum</th>
+                            <th>Eylem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.HesapOzetiListesi)
+                        {
+                            <tr>
+                                <td>
+                                    <i class="ion @{ if (item.IslemTipi == 1){ <text>ion-arrow-up-a</text>}else { <text>ion-arrow-down-a</text> } } "></i>
+                                </td>
+                                <td>@item.IslemTarihi</td>
+                                <td><a href="#">@item.IslemAciklamasi</a></td>
+                                <td><span class="label @{if (item.IslemDurum == "Onay Bekleniyor"){<text>label-warning</text>}else {<text>label-success</text>} }">@item.IslemDurum</span></td>
+                                <td><span class="pull-left @{if (item.IslemTipi == 0){<text>text-danger</text>}else {<text>text-success</text>} } tran-price">@{if (item.IslemTipi == 0)
+                                    {<text>-</text>}
+                                    else {<text>+</text>}} @string.Format("{0:C}", item.IslemTutar)</td>
+                                </tr>
+                                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+</div>
+
+<!-- Datatable js -->
+<script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="~/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="~/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="~/assets/plugins/datatables/jszip.min.js"></script>
+<script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="~/assets/pages/datatables.init.js"></script>
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

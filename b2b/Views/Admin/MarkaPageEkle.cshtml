@@ -1,0 +1,26 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Marka" class="control-label">Marka</label>
+            <input type="text" class="form-control formCtrl" id="Marka" name="Marka" placeholder="Marka Giriniz" required="required" data-errorinfo="Marka" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="MarkaAltId" class="control-label">Marka Şuna Ait</label>
+            <select class="form-control" id="MarkaAltId">
+                <option value="0">Ana Dizin (Herhangi bir üst Kategoriye ait değil)</option>
+            </select>
+        </div>
+    </div>
+</div>
+<script>
+    $.get('@Url.Content("~/")Siparis/MarkaVer', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#MarkaAltId').append("<option value=" + d[i].Id + ">" + d[i].Marka + "</option>")
+        });
+    });
+</script>

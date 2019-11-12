@@ -1,0 +1,601 @@
+﻿<!DOCTYPE html>
+<html lang="tr-TR">
+<head>
+    <meta http-equiv="content-language" content="tr-TR">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    @{
+        if (ViewBag.Desc == "")
+        {<text>
+                <meta name="description" content="ÇiçekGider Mersin online çiçek siparişinde bir marka">
+        </text>}
+    else
+    { <text>
+            <meta name="description" content="@ViewBag.Desc">
+            <meta property="og:image" content="@ViewBag.ogImg">
+            <meta property="og:description" content="@ViewBag.Desc">
+    </text>} }
+
+    <meta name="author" content="NFO Digital - E-Ticaret Çözümleri Mersin">
+    <meta name="revisit-after" content="2 days">
+    <link rel="canonical" href="http://www.cicekgider.com/" />
+
+    <!-- Favicons Icon -->
+    <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/x-icon" />
+    <title>Mersin Çiçek Siparişi -Çiçekgider</title>
+    <!-- Mobile Specific -->
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/assets/css/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/owl.theme.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.bxslider.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.mobile-menu.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" media="all">
+
+    <link rel="stylesheet" href="/assets/cards/skeuocard.reset.css" />
+    <link rel="stylesheet" href="/assets/cards/skeuocard.css" />
+
+    @if (IsSectionDefined("AddToHead"))
+    {
+        @RenderSection("AddToHead", required: false)
+    }
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
+
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page">
+        <!-- Header -->
+        <header>
+            <div class="header-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 header-phone">
+                            <i class="fa fa-mobile"></i>444 2 151
+                        </div>
+                        <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12 logo-block">
+                            <!-- Header Logo -->
+                            <div class="logo">
+                                <a title="Çiçek Gider" href="/">
+                                    <img alt="Çiçek Gider" src="/assets/images/logo1.png">
+                                </a>
+                            </div>
+                            <!-- End Header Logo -->
+                        </div>
+
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 hidden-xs">
+                            <div class="search-box">
+                                <form action="/Products/Search" method="POST" id="search_mini_form" name="Kategoriler">
+                                    <input type="text" placeholder="Çiçek Arayın..." value="" maxlength="70" name="q" id="search">
+                                    <button type="button" class="search-btn-bg"><span class="glyphicon glyphicon-search"></span>&nbsp;</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- end header -->
+            <!-- Navigation -->
+
+            <nav>
+                <div class="container">
+                    <div class="mm-toggle-wrap">
+                        <div class="mm-toggle"><i class="fa fa-align-justify"></i><span class="mm-label">Menu</span> </div>
+                    </div>
+                    <div class="nav-inner">
+                        <!-- BEGIN NAV -->
+                        <ul id="nav" class="hidden-xs">
+                            <li class="level0 parent drop-menu" id="nav-home"><a href="/" class="level-top"><i class="fa fa-home"></i><span class="hidden">Giriş</span></a></li>
+                            <li class="level0 nav-6 level-top drop-menu">
+                                <a class="level-top"><span>Gönderim Amacı</span> </a>
+                                <ul class="level1">
+                                    <li class="level2 first"><a href="/Products/ProductList_ByCategory/1"><span>Sevgililer Günü</span></a> </li>
+                                    <li class="level2 first"><a href="/Products/ProductList_ByCategory/1"><span>Seni Seviyorum</span></a> </li>
+                                    <li class="level2 nav-10-2"><a href="/Products/ProductList_ByCategory/3"><span>Doğum Günü</span> </a></li>
+                                    <li class="level2 nav-10-3"><a href="/Products/ProductList_ByCategory/4"><span>Özür Dileme</span> </a></li>
+                                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/5"><span>Yeni İş</span> </a></li>
+                                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/6"><span>Yıl Dönümü</span> </a></li>
+                                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/7"><span>Yeni Bebek</span> </a></li>
+                                    <li class="level2 parent"><a href="/Products/ProductList_ByCategory/8"><span>Açılış / Tören</span></a> </li>
+                                </ul>
+                            </li>
+
+                            <li class="mega-menu">
+                                <a class="level-top" href="#"><span>Çiçek Türleri</span></a>
+                                <div class="level0-wrapper dropdown-6col">
+                                    <div class="container">
+                                        <div class="level0-wrapper2">
+                                            <div class="nav-block nav-block-center">
+                                                <!--mega menu-->
+                                                <div class="col-1">
+                                                    <ul class="level0">
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/10"><span>Güller</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/16"><span>Kırmızı Güller</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/17"><span>Beyaz Güller</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/21"><span>Özel Tasarım Güller</span></a> </li>
+
+                                                            </ul>
+                                                        </li>
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/11"><span>Lilyum &amp; Zambak</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/27"><span>Lilyum Aranjman</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/28"><span>Saksıda Lilyum</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/11"><span>Tüm Lilyum Çeşitleri</span></a> </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/12"><span>Mevsim Çiçekleri</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/12"><span>Mevsim Çiçekleri</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/32"><span>Kır Çiçekleri</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/12"><span>Tüm Mevsim Çiçekleri</span></a> </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/13"><span>Buketler</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/22"><span>Çiçek Buketleri</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/25"><span>Çiçek Aranjmanlar</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/8"><span>Çiçek Buketler</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/26"><span>Özel Tasarım Çiçekler</span></a> </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/14"><span>Papatya &amp; Gerbera</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/30"><span>Papatyalar</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/31"><span>Gerberalar</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/14"><span>Tüm Papatya ve Gerberalar</span></a> </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="level3 nav-6-1 parent item">
+                                                            <a href="/Products/ProductList_ByCategory/15"><span>Orkideler</span></a>
+                                                            <ul class="level1">
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/33"><span>Mor Orkideler</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/34"><span>Beyaz Orkideler</span></a> </li>
+                                                                <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/15"><span>Tüm Orkide Çeşitleri</span></a> </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                    <!--level0-->
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="menu_image1">
+                                                        <a title="" href="#">
+                                                            <img alt="Mersin Hızlı Çiçek Siparişi" src="/assets/images/menu-shoes.png">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--nav-block nav-block-center-->
+
+                                        </div>
+                                        <!--level0-wrapper2-->
+                                    </div>
+                                    <!--container-->
+                                </div>
+                                <!--level0-wrapper dropdown-6col-->
+                                <!--mega menu-->
+                            </li>
+
+                            <li class="mega-menu">
+                                <a class="level-top"><span>Özel Koleksiyonlar</span></a>
+                                <div class="level0-wrapper dropdown-6col">
+                                    <div class="container">
+                                        <div class="level0-wrapper2">
+                                            <div class="nav-block nav-block-center">
+                                                <!--mega menu-->
+                                                <ul class="level0">
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/36"><span>Vazoda Güller</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/36">
+                                                                    <img src="/assets/images/koleksiyon1.png" alt="Özür Dileme Çiçekleri">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/38"><span>Lilyum Çeşitleri</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/38">
+                                                                    <img src="/assets/images/koleksiyon2.png" alt="Mersin Sevgiliye Çiçek">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/37"><span>Işıltılı Beyaz Güller</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/37">
+                                                                    <img src="/assets/images/koleksiyon3.png" alt="Mersin Beyaz Gül Siparişi">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/16"><span>Özel Lilyum</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/16">
+                                                                    <img src="/assets/images/koleksiyon4.png" alt="Mersin Lilyum Çiçek Siparişi">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/16"><span>Kırmızı Güller</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/16">
+                                                                    <img src="/assets/images/koleksiyon5.png" alt="Mersin Kırmızı Gül Siparişi">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/39"><span>Vazo İçi Aranjmanlar</span></a>
+                                                        <ul class="level1">
+                                                            <li class="push_img">
+                                                                <a href="/Products/ProductList_ByCategory/39">
+                                                                    <img src="/assets/images/koleksiyon6.png" alt="Mersin Vazo içi Aranjman">
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                <!--level0-->
+                                            </div>
+                                            <!--nav-block nav-block-center-->
+                                            <!--nav-block nav-block-center-->
+
+                                        </div>
+                                        <!--level0-wrapper2-->
+                                    </div>
+                                    <!--container-->
+                                </div>
+                                <!--level0-wrapper dropdown-6col-->
+                                <!--mega menu-->
+                            </li>
+                            <li class="mega-menu">
+                                <a class="level-top" href="#"><span>Özel Günler</span></a>
+                                <div class="level0-wrapper dropdown-6col">
+                                    <div class="container">
+                                        <div class="level0-wrapper2">
+                                            <div class="nav-block nav-block-center grid12-8 itemgrid itemgrid-4col">
+                                                <!--mega menu-->
+                                                <ul class="level0">
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/3"><span>Doğum Günü</span></a>
+                                                        <ul class="level1">
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/40"><span>Vazoda Papatyalar</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/41"><span>Aranjman Güller</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/15"><span>Orkide Çiçekleri</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/27"><span>Mesajlı Lilyumlar</span></a> </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="#"><span>Yeni İş &amp; Terfi</span></a>
+                                                        <ul class="level1">
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/34"><span>Beyaz Orkideler</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/42"><span>Kürede Aranjmanlar</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/43"><span>Bonsai Çeşitleri</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/44"><span>Kutuda Çiçekler</span></a> </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/1"><span>Sevgiliye Çiçek</span></a>
+                                                        <ul class="level1">
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/44"><span>Kutuda Güller</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/34"><span>Beyaz Orkideler</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/45"><span>Premium Kutuda</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/30"><span>Beyaz Papatyalar</span></a> </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="level3 nav-6-1 parent item">
+                                                        <a href="/Products/ProductList_ByCategory/46"><span>Yıldönümü</span></a>
+                                                        <ul class="level1">
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/16"><span>Kırmızı Güller</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/36"><span>Vazoda Güller</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/41"><span>Gül Aranjmanları</span></a> </li>
+                                                            <li class="level2 nav-6-1-1"><a href="/Products/ProductList_ByCategory/47"><span>Ayıcıklı Güller</span></a> </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                <!--level0-->
+                                            </div>
+                                            <!--nav-block nav-block-center-->
+                                            <div class="nav-block nav-block-right std grid12-4">
+                                                <img src="/assets/images/menu-furniutre.png" alt="Mersin Özel Gün çiçek siparişi">
+                                            </div>
+                                        </div>
+                                        <!--level0-wrapper2-->
+                                    </div>
+                                    <!--container-->
+                                </div>
+                                <!--level0-wrapper dropdown-6col-->
+                                <!--mega menu-->
+                            </li>
+                            <li class="nav-custom-link mega-menu">
+                                <a href="#" class="level-top"><span>Kampanya Köşesi</span> </a>
+                                <div class="level0-wrapper custom-menu">
+                                    <div class="container">
+                                        <div class="header-nav-dropdown-wrapper clearer">
+                                            <div class="grid12-3">
+                                                <div>
+                                                    <img src="/assets/images/custom-img1.jpg" alt="Mersin uygun fiyat çiçek siparişi">
+                                                </div>
+                                                <h4 class="heading">Bugüne Özel Fırsatlar!</h4>
+                                                <p>Sadece bugüne özel fırsatlar, her gün yenilenen fırsatlar için kampanya köşemizi takipte kalın!</p>
+
+                                            </div>
+                                            <div class="grid12-3">
+                                                <div>
+                                                    <img src="/assets/images/custom-img2.jpg" alt="Özel fiyat çiçek siparişi">
+                                                </div>
+                                                <h4 class="heading">Aranjman Fırsatları</h4>
+                                                <p>Özel aranjman indirimlerini incelemek için buraya bakın!</p>
+
+                                            </div>
+                                            <div class="grid12-3">
+                                                <div>
+                                                    <img src="/assets/images/custom-img3.jpg" alt="mersin sevgiliye özel çiçek siparişi">
+                                                </div>
+                                                <h4 class="heading">Sevgiliye Özel</h4>
+                                                <p>Sevgilinize göndermek için her zaman size özel kampanyalarımızı burada hazırladık.</p>
+
+                                            </div>
+                                            <div class="grid12-3">
+                                                <div>
+                                                    <img src="/assets/images/custom-img4.jpg" alt="yeni tasarım çiçek siparişi">
+                                                </div>
+                                                <h4 class="heading">Yeni Tasarımlar</h4>
+                                                <p>En özel yeni çiçek tasarımlarını takip etmek için tıklayın.</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <!--nav-->
+                        <div class="top-cart-contain pull-right">
+                            <!-- Top Cart -->
+                            <div class="mini-cart">
+                                <div data-toggle="dropdown" data-hover="dropdown" class="basket dropdown-toggle"> <a href="/Sepet/Index"> <span class="cart_count">0</span> </a> </div>
+                                <div>
+                                    @*@Html.Action("SepetGoster", "Sepet")*@
+                                </div>
+                            </div>
+                            <!-- Top Cart -->
+                            <div id="ajaxconfig_info" style="display: none">
+                                <a href="#/"></a>
+                                <input value="" type="hidden">
+                                <input id="enable_module" value="1" type="hidden">
+                                <input class="effect_to_cart" value="1" type="hidden">
+                                <input class="title_shopping_cart" value="Sepete Git" type="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- end nav -->
+        </header>
+        @RenderBody()
+        <!-- Footer -->
+        <footer>
+            <div class="footer-inner">
+                <div class="container">
+
+                </div>
+            </div>
+            <div class="footer-middle">
+                <div class="row">
+                    <address>
+                        <i class="fa fa-map-marker"></i>Çiçek Gider Sakarya Cad. No:9/B, Akdeniz/Mersin (İçel)<i class="fa fa-mobile"></i><span> 444 2 151</span> <i class="fa fa-envelope"></i><span>iletisim@cicekgider.com</span>
+                    </address>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12 coppyright">
+                            <a href="/Home/Gizlilik/">Gizlilik Sözleşmesi</a> | <a href="/Home/Hakkimizda">Hakkımızda</a> | <a href="/Home/Teslimat">Teslimat ve İade</a> | <a href="/Home/Mesafeli">Mesafeli Satış Sözleşmesi</a>
+                            <ul class="links">
+                                <li><a href="http://www.nfo.com.tr" title="NFO Digital eticaret çözümleri">NFO Digital / E-Ticaret Çözümleri</a> </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 col-xs-12 company-links">
+                            <img src="~/assets/images/master.png" height="35" /> |
+                            <img src="~/assets/images/visacard.png" height="35" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- End Footer -->
+    <!-- mobile menu -->
+    <div id="mobile-menu">
+        <ul>
+            <li>
+                <div class="mm-search">
+                    <form id="search1" name="search">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                            <input type="text" class="form-control simple" placeholder="Ne Aramıştınız?" name="srch-term" id="srch-term">
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li><a href="/" title="Ana Sayfa">Anasayfa</a></li>
+            <li>
+                <a>Gönderim Amacı</a>
+                <ul>
+                    <li class="level2 first"><a href="/Products/ProductList_ByCategory/1"><span>Seni Seviyorum</span></a> </li>
+                    <li class="level2 nav-10-2"><a href="/Products/ProductList_ByCategory/3"><span>Doğum Günü</span> </a></li>
+                    <li class="level2 nav-10-3"><a href="/Products/ProductList_ByCategory/4"><span>Özür Dileme</span> </a></li>
+                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/5"><span>Yeni İş</span> </a></li>
+                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/46"><span>Yıl Dönümü</span> </a></li>
+                    <li class="level2 nav-10-4"><a href="/Products/ProductList_ByCategory/7"><span>Yeni Bebek</span> </a></li>
+                    <li class="level2 parent"><a href="/Products/ProductList_ByCategory/8"><span>Açılış / Tören</span></a> </li>
+                </ul>
+            </li>
+
+            <li>
+                <a>Çiçek Türleri</a>
+                <ul>
+                    <li><a href="/Products/ProductList_ByCategory/16">Güller</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/11">Lilyum &amp; Zambak</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/12">Mevsim Çiçekleri</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/13">Buketler</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/14">Papatya &amp; Gerbera</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/15">Orkideler</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a>Özel Koleksiyonlar</a>
+                <ul>
+                    <li><a href="/Products/ProductList_ByCategory/36">Vazoda Güller</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/38">Lilyum Çeşitleri</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/37">Işıltılı Beyaz Güller</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/16">Özel Lilyum</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/16">Kırmızı Güller</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/39">Vazo İçi Aranjmanlar</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a>Özel Günler</a>
+                <ul>
+                    <li><a href="/Products/ProductList_ByCategory/3">Doğum Günü</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/5">Yeni İş ve Terfi</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/1">Sevgiliye Çiçek</a></li>
+                    <li><a href="/Products/ProductList_ByCategory/6">Yıldönümü</a></li>
+                </ul>
+            </li>
+
+
+        </ul>
+    </div>
+    <!-- mobile menu -->
+    <!-- JavaScript -->
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/cards/cssua.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.mobile-menu.min.js"></script>
+    <script>
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+        });
+
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+        });
+    </script>
+    <div id="wait" style="width: 100%; height: 100%; background-color: #000000; position: fixed; top: 0; left: 0; z-index: 10; opacity: 0.9; display: none">
+        <div style="width: 150px; height: 89px; border: 0px; position: absolute; top: 45%; left: 47%; padding: 2px; z-index: 1">
+            <img src='/assets/loading.gif' width="64" height="64" /><br>
+        </div>
+    </div>
+    <!-- Hot Deals Timer 1-->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65879905-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-65879905-2');
+    </script>
+
+    <script src="/assets/cards/skeuocard.js"></script>
+    <!-- WhatsHelp.io widget -->
+    <script type="text/javascript">
+        (function () {
+            var options = {
+                whatsapp: "+905324142333", // WhatsApp number
+                call_to_action: "Merhaba, WhatsApp hattımızdan bize yazabilirsiniz.", // Call to action
+                position: "left", // Position may be 'right' or 'left'
+            };
+            var proto = document.location.protocol, host = "whatshelp.io", url = proto + "//static." + host;
+            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+            s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+            var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+        })();
+    </script>
+    <!-- /WhatsHelp.io widget -->
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v3.2'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/tr_TR/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your customer chat code -->
+    <div class="fb-customerchat"
+         attribution=setup_tool
+         page_id="408955569136225"
+         logged_in_greeting="Merhaba, Ben Batuhan. Size nasıl yardımcı olabilirim?"
+         logged_out_greeting="Merhaba, Ben Batuhan. Size nasıl yardımcı olabilirim?">
+    </div>
+    @if (IsSectionDefined("AddToBottom"))
+    {
+        @RenderSection("AddToBottom", required: false)
+    }
+    <script>
+        function SepeteAt(id) {
+            $.ajax({
+                type: 'POST',
+                url: '/Sepet/SepeteAt',
+                data: { 'urunId': id, 'adet': 1 },
+                beforeSend: function (e) {
+                    $('#loading').show();
+                },
+                success: function (d) {
+                    if (d.Error == "success") {
+                        window.location = '/Sepet/Index';
+                    }
+                },
+
+            });
+        }
+        $('#loading').hide();
+    </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "MarkalariListele";
+    Layout = "~/Views/_Master.cshtml";
+}
+@model B2B.Dto.MarkayaGoreAramaSinifi
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+
+        <h4 class="page-title">Detaylı arama</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Ana Sayfa</a>
+            </li>
+            <li>
+                Sipariş
+            </li>
+            <li class="active">Detaylı arama</li>
+        </ol>
+
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-sm-8">
+
+        <div class="portfolioContainer m-b-15">
+            <!--#deneme yapacağız-->
+            @{
+                var _x = Model.Urunler;
+                if (Request.QueryString["MarkaId"] == null)
+                {
+                    _x = Model.Urunler;
+                }
+                else
+                {
+                    _x = Model.Urunler.Where(q => q.Id == int.Parse(Request.QueryString["MarkaId"])).ToList();
+                }
+            }
+            @foreach (var item in _x)
+            {
+                <div class="col-sm-6 col-lg-3 col-md-4">
+                    <div class="product-list-box thumb">
+                        <a href="/Products/ProductDetails/@item.Id">
+                            <img src="/Upload/imajlar/@Html.Action("UrunFotografiVer", "Products", new { id = item.Id })" class="thumb-img" style="width:120px" alt="work-thumbnail">
+                        </a>
+                        <div class="detail">
+                            <h4 class="m-t-0 m-b-5"><a href="/Products/ProductDetails/@item.Id" class="text-dark">@Html.Action("UrunAdiVer", "Products", new { UrunId = item.Id })</a></h4>
+                            <div class="rating">
+                                <ul class="list-inline">
+                                    <li><a class="fa fa-star" href=""></a></li>
+                                    <li><a class="fa fa-star" href=""></a></li>
+                                    <li><a class="fa fa-star" href=""></a></li>
+                                    <li><a class="fa fa-star" href=""></a></li>
+                                    <li><a class="fa fa-star" href=""></a></li>
+                                </ul>
+                            </div>
+                            <h5 class="m-0"><span class="text-custom paraFormatla">@string.Format("{0:C}", Html.Action("FiyatVer", "Products", new { urunId = item.Id }))</span></h5>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="portlet">
+            <div class="portlet-heading bg-danger">
+                <h3 class="portlet-title">
+                    Markalar Listeleniyor
+                </h3>
+                <div class="portlet-widgets">
+                    <a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-danger"><i class="ion-minus-round"></i></a>
+                    <span class="divider"></span>
+                    <a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-danger" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div id="basicTree">
+                        @foreach (var item in Model.Markalar.OrderBy(q => q.Marka).Where(q => q.MarkaAltId == 0))
+                        {
+                            <ul data-listingId="@item.Id">
+                                <li data-jstree='{"opened":true}'>
+                                    <a href="?MarkaId=@item.Id">@item.Marka</a>
+                                    @{
+                                        if (Model.Markalar.SingleOrDefault(q => q.MarkaAltId == item.Id) != null)
+                                        {
+                                            <ul><li><a href="?MarkaId=@item.Id">@Model.Markalar.FirstOrDefault(q => q.MarkaAltId == item.Id).Marka</a></li></ul>
+                                        }
+                                    }
+                                </li>
+                            </ul>
+                                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ladda button  -->
+<script src="/assets/plugins/ladda-buttons/js/spin.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.jquery.min.js"></script>
+<!-- Tree view js -->
+<script src="/assets/plugins/jstree/jstree.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // Bind normal buttons
+        $('.ladda-button').ladda('bind', { timeout: 2000 });
+
+        // Bind progress buttons and simulate loading progress
+        Ladda.bind('.progress-demo .ladda-button', {
+            callback: function (instance) {
+                var progress = 0;
+                var interval = setInterval(function () {
+                    progress = Math.min(progress + Math.random() * 0.1, 1);
+                    instance.setProgress(progress);
+
+                    if (progress === 1) {
+                        instance.stop();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        });
+
+
+        var l = $('.ladda-button-demo').ladda();
+
+        l.click(function () {
+            // Start loading
+            l.ladda('start');
+
+            // Timeout example
+            // Do something in backend and then stop ladda
+            setTimeout(function () {
+                l.ladda('stop');
+            }, 12000)
+        });
+
+    });
+
+    //basic trw
+    $('#basicTree').jstree({
+        'core': {
+            'themes': {
+                'responsive': false
+            }
+        },
+        'types': {
+            'default': {
+                'icon': 'md md-keyboard-arrow-right'
+            },
+            'file': {
+                'icon': 'md md-insert-drive-file'
+            }
+        },
+        'plugins': ['types']
+    });
+    
+
+</script>

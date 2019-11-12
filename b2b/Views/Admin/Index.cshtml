@@ -1,0 +1,216 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+@model B2B.Dto.AdminIndex
+@{
+    if (Model.AdminUyarilari != null)
+    {
+        foreach (var item in Model.AdminUyarilari)
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-border panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Uyarı</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                @item
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+}
+
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-bg-color-icon card-box fadeInDown animated">
+            <div class="bg-icon bg-icon-info pull-left">
+                <i class="md md-attach-money text-info"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark">@string.Format("{0:C}", Model.ToplamSatisTutar)</h3>
+                <p class="text-muted">Toplam Satışlar</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-pink pull-left">
+                <i class="md md-add-shopping-cart text-pink"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">@Model.AdetSiparis</b></h3>
+                <p class="text-muted">Sipariş</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-purple pull-left">
+                <i class="md md-equalizer text-purple"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">@Model.MusteriCount</b></h3>
+                <p class="text-muted">Müşteri</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-success pull-left">
+                <i class="md md-remove-red-eye text-success"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">@Model.TotalVisits</b></h3>
+                <p class="text-muted">Toplam ziyaretler</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="card-box">
+            <h4 class="text-dark header-title m-t-0 m-b-30">ANALİZ</h4>
+
+            <div class="widget-chart text-center">
+                <input class="knob" data-width="150" data-height="150" data-linecap=round data-fgColor="#fb6d9d" value="@Model.AdetSiparis_BugunWidget" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".15" />
+                <h5 class="text-muted m-t-20">Bugünki Toplam Satış</h5>
+                <h2 class="font-600">@string.Format("{0:C}", Model.TutarSiparis_BugunWidget)</h2>
+                <ul class="list-inline m-t-15">
+                    <li>
+                        <h5 class="text-muted m-t-20">Dün</h5>
+                        <h4 class="m-b-0">@string.Format("{0:C}", Model.DunkuSatis_BugunWidget)</h4>
+                    </li>
+                    <li>
+                        <h5 class="text-muted m-t-20">Geçen Hafta</h5>
+                        <h4 class="m-b-0">@string.Format("{0:C}", Model.TutarSatis_GecenHafta_BugunWidget)</h4>
+                    </li>
+                    <li>
+                        <h5 class="text-muted m-t-20">Geçen Ay</h5>
+                        <h4 class="m-b-0">@string.Format("{0:C}", Model.TutarSatisTutar_GecenAy_BugunWidget)</h4>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-actions-bar table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Firma</th>
+                            <th>Durum</th>
+                            <th>Tutar</th>
+                            <th style="min-width: 80px;">Eylem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.SonSiparisler.OrderByDescending(q=>q.Id))
+                        {
+                            <tr id="row-@item.Id" class="clickable-row" data-href="/Admin/SiparisDuzenle/@item.Id">
+                                <td>@item.SiparisTarihi</td>
+                                <td>@item.Firma</td>
+                                <td>
+                                    <span class="label @{if (item.SiparisDurumu == "Onay Bekliyor")
+                                                         {<text>label-warning</text>}
+                                                         else
+                                                         {<text>label-success</text>}}">@item.SiparisDurumu</span>
+                                                    </td>
+                                                    <td>
+                                                        @string.Format("{0:C}", item.SiparisToplami)
+                                                    </td>
+                                                    <td><a href="javascript:SiparisiOnayla(@item.Id);" class="table-action-btn"><i class="md md-done text-success"></i></a></td>
+                                                </tr>
+    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->
+<!-- jQuery  -->
+<script src="/assets/plugins/waypoints/lib/jquery.waypoints.js"></script>
+<script src="/assets/plugins/counterup/jquery.counterup.min.js"></script>
+
+<script src="/assets/plugins/morris/morris.min.js"></script>
+<script src="/assets/plugins/raphael/raphael-min.js"></script>
+
+<script src="/assets/plugins/jquery-knob/jquery.knob.js"></script>
+
+<script src="/assets/pages/jquery.dashboard.js"></script>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('.counter').counterUp({
+            delay: 100,
+            time: 1200
+        });
+        $(".knob").knob();
+
+    });
+    function SiparisiOnayla(Id) {
+        $.post('@Url.Content("~/")Admin/SiparisDurumDegis', {
+            'Id': Id,
+            'SiparisDurumu': 1
+        }, function (d) {
+            if (d.Error == 0) {
+                $('#row-' + Id).fadeTo("slow", 0.7, function () {
+                    $('#row-' + Id).remove();
+                })
+            }
+            else {
+                swal("Başarısız!", "Üzgünüm, bir hata oluştu", "warning");
+            }
+        });
+    }
+
+    $(".clickable-row").mouseover(function () {
+        $(this).css('cursor', 'pointer');
+    });
+    $(".clickable-row").click(function () {
+        window.location = $(this).data("href");
+    });
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

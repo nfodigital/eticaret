@@ -1,0 +1,158 @@
+﻿@model B2B.Dto.SiparisDuzenleDto
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="B2B Toptan Satış Sistemi, Fortech Bilişim Danışmanlığı Hizmetleri">
+
+    <link rel="shortcut icon" href="/assets/images/favicon_1.ico">
+
+    <title>B2B - Toptan satış sistemi, Yönetim Paneli</title>
+
+    <!--venobox lightbox-->
+    <link rel="stylesheet" href="/assets/plugins/magnific-popup/dist/magnific-popup.css" />
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap-select css-->
+    <link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="/assets/js/modernizr.min.js"></script>
+
+
+
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-12">
+            <form>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card-box">
+                            <h5 class="text-muted text-uppercase m-t-0 m-b-20"><b>Sipariş Bilgileri</b></h5>
+                            <div class="form-group m-b-20">
+                                <label>Sipariş No <span class="text-danger">*</span></label>
+                                <input readonly="readonly" type="text" class="form-control" value="@Model.Siparis.SiparisNo">
+                            </div>
+
+                            <div class="form-group m-b-20">
+                                <label>Ürünler <span class="text-danger">*</span></label>
+                                <div class="col-sm-12">
+                                    <div class="card-box">
+                                        <div class="table-rep-plugin">
+                                            <div class="table-responsive" data-pattern="priority-columns">
+                                                <table id="products" class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Fotoğraf</th>
+                                                            <th>Ürün Adı</th>
+                                                            <th>Adet</th>
+                                                            <th>Tutar</th>
+                                                            <th>Toplam</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.Siparis.SiparisUrunleri)
+                                                        {
+                                                            <tr>
+                                                                <td><img src="/Upload/imajlar/@Html.Action("UrunFotografiVer", "Products", new { id = item.UrunId })" id="row-@item.Id" data-fotoUrl="@item.UrunId" height="30" /></td>
+                                                                <td>@Html.Action("UrunAdiVer", "Products", new { UrunId = item.UrunId })</td>
+                                                                <td>@item.Adet</td>
+                                                                <td>@string.Format("{0:C}", item.KalemTutar / item.Adet)</td>
+                                                                <td>@string.Format("{0:C}", item.KalemTutar)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                    <tfoot>
+                                                        @{
+                                                            decimal IskontoluTutar = Model.Siparis.SiparisUrunleri.Sum(q => q.KalemTutar) - Model.Siparis.IskontoTutar;
+                                                            decimal KdvTutari = IskontoluTutar * 18 / 100;
+                                                        }
+                                                        <tr>
+                                                            <td colspan="4" style="text-align:right"><b>Toplam</b></td>
+                                                            <td colspan="5">@string.Format("{0:C}", Model.Siparis.SiparisUrunleri.Sum(q => q.KalemTutar))</td>
+                                                        </tr>
+                                                        @{
+
+                                                            if (Model.Siparis.SiparisIskontoOrani > 0)
+                                                            {
+                                                                <tr>
+                                                                    <td colspan="4" style="text-align:right"><b>İskonto (%@Model.Siparis.SiparisIskontoOrani)</b>
+                                                                    <td colspan="5"><span class="text-danger">- @string.Format("{0:C}", Model.Siparis.IskontoTutar)</span></td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        <tr>
+                                                            <td colspan="4" style="text-align:right"><b>Ara Toplam</b>
+                                                            <td colspan="5">@string.Format("{0:C}", Model.Siparis.SiparisUrunleri.Sum(q=>q.KalemTutar) - Model.Siparis.IskontoTutar)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="4" style="text-align:right"><b>K.D.V (%18)</b>
+                                                            <td colspan="5">@string.Format("{0:C}", KdvTutari)</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td colspan="4" style="text-align:right">
+                                                                <b>Genel Toplam</b>
+                                                            </td>
+
+                                                            <td colspan="5" style="text-align:left">@string.Format("{0:C}", Model.Siparis.SiparisToplami)</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- end row -->
+                            </div>
+                            <div class="form-group m-b-20">
+                                <label>Adres</label>
+                                <textarea class="form-control" rows="3" readonly>@Model.Siparis.SiparisAdresi</textarea>
+                            </div>
+                            <div class="form-group m-b-20">
+                                <label>Siparişi veren Firma</label>
+                                <input readonly="readonly" type="text" class="form-control" value="@Html.Action("FirmaAdiVer", "CommonFunctions", new { FirmaId = Model.Siparis.FirmaId })">
+                            </div>
+                            <div class="form-group m-b-20">
+                                <label>Siparişi veren Firma Kullanıcısı</label>
+                                <input readonly="readonly" type="text" class="form-control" value="@Html.Action("KullanicininAdiSoyadi", "CommonFunctions", new { UserId = Model.Siparis.SiparisVeren })">
+                            </div>
+                            <div class="form-group m-b-20">
+                                <label class="m-b-15">Tarih ve Saat</label>
+                                <br />
+                                @Model.Siparis.SiparisTarihi
+                            </div>
+
+                            <div class="form-group m-b-10">
+                                <label>Notlar</label>
+                                <textarea class="form-control" rows="3" readonly>@Model.Siparis.SiparisNotlari</textarea>
+                            </div>
+                            <div class="form-group m-b-10">
+                                @Html.Raw(Model.Siparis.SiparisAyrintilari)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        print();
+    $("img[data-fotoUrl]").each(function () {
+        $.get('@Url.Content("~/")Products/FotografVer', {
+            'id': $(this).attr('data-fotoUrl')
+        }, function (d) {
+            $(this).attr("src", d);
+        });
+    });
+        
+    </script>
+    <!-- Sweet-Alert  -->
+    <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+
+</body>
+</html>

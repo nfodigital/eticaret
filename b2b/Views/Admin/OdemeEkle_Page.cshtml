@@ -1,0 +1,27 @@
+﻿<div class="row">
+    <div class="col-lg-8">
+
+        <div class="form-group">
+            <label for="OdemeTipleri">Ödeme Tipi</label>
+            <select class="form-control" id="OdemeTipleri">
+                <option value="-1">Lütfen Ödeme tipi Seçiniz
+                </option>
+                <option value="KREDİ KARTI">KREDİ KARTI</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label for="Tutar">Tutar</label>
+            <input type="text" class="form-control" name="OdemeTipleri" id="Tutar" />
+        </div>
+    </div>
+</div>
+<script>
+    $.get('@Url.Content("~/")Odeme/OdemeTipleri', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#OdemeTipleri').append("<option value=" + d[i].OdemeAdi + ">" + d[i].OdemeAdi + "</option>")
+        });
+    });
+</script>

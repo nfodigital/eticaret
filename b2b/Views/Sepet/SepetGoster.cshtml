@@ -1,0 +1,31 @@
+﻿@model B2B.Dto.SepetDto
+<div class="top-cart-content">
+    <!--block-subtitle-->
+    <ul class="mini-products-list" id="cart-sidebar">
+        @{ 
+            if (Model != null)
+            {
+                foreach (var item in Model.Urunler)
+                {
+            <li class="item first">
+                <div class="item-inner">
+                    <a class="product-image" title="@item.UrunBaslik" href="#l">
+                        <img alt="@item.UrunBaslik" src="/Upload/imajlar/@item.Fotograf">
+                    </a>
+                    <div class="product-details">
+                        <!--access-->
+                        <strong>1</strong> x <span class="price">@string.Format("{0:C}", item.Adet * item.UrunFiyat)</span>
+                        <p class="product-name"><a href="#">@item.UrunBaslik</a> </p>
+                    </div>
+                </div>
+            </li>
+                }
+            }
+        }
+    </ul>
+    <!--actions-->
+    <div class="actions">
+        <button class="btn-checkout" title="Checkout" type="button"><span>Sepet</span> </button>
+        <a href="/Sepet/Index" class="view-cart"><span>Ödemeye Geç</span></a>
+    </div>
+</div>

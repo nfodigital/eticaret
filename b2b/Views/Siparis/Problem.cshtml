@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Sipariş Onayı";
+    Layout = "~/Views/_NewMaster.cshtml";
+}
+<!-- main-container -->
+  <div class="main-container col2-right-layout">
+    <div class="main container">
+      <div class="row">
+        <section class="col-sm-9 wow bounceInUp animated">
+        <div class="col-main">
+          <div class="page-title">
+            <h2>Hata Oluştu</h2>
+          </div>
+          <div class="static-contain">
+            <p><img src="/assets/images/fail.png" height="90" /> Siparişinizin tutarını kredi kartınızdan çekemedik.<br /><span style="color:#ff0000">Bankadan gelen hata mesajı : @Request.QueryString["m"] </span>
+               <br /> Lütfen <a href="/Sepet/Index">burayı tıklayarak</a> tekrar deneyiniz.
+            </p>
+            </div></div>
+        </section>
+        <aside class="col-right sidebar col-sm-3 wow bounceInUp animated">
+          <div class="block block-company">
+            <div class="block-title">Gider Çiçek </div>
+            <div class="block-content">
+              <ol id="recently-viewed-items">
+                <li class="item odd"><strong>Ana sayfa</strong></li>
+              </ol>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <!--End main-container --> 

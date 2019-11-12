@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "SistemAyarlari";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+<!-- Forms -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="m-t-0 header-title"><b>Basic example</b></h4>
+                    <p class="text-muted m-b-30 font-13">
+                        Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>,
+                        <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to
+                        <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
+                    </p>
+
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox checkbox-primary">
+                                <input id="checkbox1" type="checkbox">
+                                <label for="checkbox1">
+                                    Remember me
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-purple waves-effect waves-light">Submit</button>
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+                    <h4 class="m-t-0 header-title"><b>Horizontal form</b></h4>
+                    <p class="text-muted m-b-30 font-13">
+                        Use Bootstrap's predefined grid classes to align labels and groups of form controls in a horizontal layout by adding
+                        <code>.form-horizontal</code> to the form (which doesn't have to be a <code>&lt;form&gt;</code>). Doing so changes
+                        <code>.form-group</code>s to behave as grid rows, so no need for <code>.row</code>.
+                    </p>
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-3 control-label">Password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword4" class="col-sm-3 control-label">Re Password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="inputPassword4" placeholder="Retype Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox2" type="checkbox">
+                                    <label for="checkbox2">
+                                        Check me out !
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group m-b-0">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button type="submit" class="btn btn-info waves-effect waves-light">Sign in</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "GecmisSiparisleriListele";
+    Layout = "~/Views/_Master.cshtml";
+}
+@model List<B2B.Dto.GecmisSiparisAyrintilari>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ana Sayfa</h4>
+        <ol class="breadcrumb">
+            <li>
+                Siparişler
+            </li>
+            <li class="active">
+                Geçmiş Siparişleri Listele
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+
+            <div class="table-responsive">
+                <table class="table table-actions-bar table-striped table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Tarih</th>
+                            <th>Sipariş Kodu</th>
+                            <th>Durum</th>
+                            <th>Tutar</th>
+                            <th style="min-width: 80px;">İşlem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="/Upload/imajlar/@Html.Action("UrunFotografiVer", "Products", new { id = item.SiparisUrunleri.FirstOrDefault().UrunId })" class="img-responsive" style="height:25px">
+                                </td>
+                                <td>@item.SiparisTarihi</td>
+                                <td><a href="/Siparis/SiparisIncele/@item.Id">@item.SiparisKodu</a></td>
+                                <td>
+                                    <span class="label @{ Html.RenderAction("LabelVer", "CommonFunctions", new { DurumId = item.SiparisDurum }); }">@item.SiparisDurum</span>
+                                </td>
+                                <td>@string.Format("{0:C}", item.SiparisToplami)</td>
+                                <td>
+                                    <a href="/Siparis/SiparisIncele/@item.Id" class="table-action-btn"><i class="md md-find-in-page"></i></a>
+                                    <a href="#" onclick="javascript:SiparisiTekrarla(@item.Id);" class="table-action-btn"><i class="md md-add-shopping-cart"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+
+
+</div>
+<script>
+    function SiparisiTekrarla(siparisNo) {
+        $.get('@Url.Content("~/")Sepet/SiparisiTekrarla', {
+            'siparisNo' : siparisNo
+        }, function (d) {
+            swal("Başarılı", "Sipariş tekrar sepetinize eklendi", "success");
+        });
+    }
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<!-- Modal-Effect (Custom box)-->
+<script src="/assets/plugins/custombox/dist/custombox.min.js"></script>
+<script src="/assets/plugins/custombox/dist/legacy.min.js"></script>
+
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

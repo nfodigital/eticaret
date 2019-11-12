@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "SiparisIncele";
+    Layout = "~/Views/_Master.cshtml";
+}
+@model B2B.Dto.SiparisAyrintilari
+@{
+    B2B.Dto.UserHolder UserInfo = (B2B.Dto.UserHolder)Session["UserInfo"];
+}
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ana Sayfa</h4>
+        <ol class="breadcrumb">
+            <li>Siparişler</li>
+            <li class="active">Sipariş İncele</li>
+        </ol>
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <!-- <div class="panel-heading">
+                                <h4>Invoice</h4>
+                            </div> -->
+            <div class="panel-body">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h4 class="text-right">
+                            <img src="/assets/images/logo.png" alt="velonic">
+                        </h4>
+                    </div>
+                    <div class="pull-right">
+                        <h4>
+                            SİPARİŞ NO
+                            <br>
+                            <strong>@Model.SiparisId</strong>
+                        </h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="pull-left m-t-30">
+                            <address>
+                               <strong>@UserInfo.FirmaUnvani</strong><br>
+                                @UserInfo.FirmaAdres<br>
+                                @UserInfo.VergiDairesi<br />
+                                @UserInfo.VergiNo
+                            </address>
+                        </div>
+                        <div class="pull-right m-t-30">
+                            <p><strong>Tarih: </strong>@Model.SiparisTarihi</p>
+                            <p class="m-t-10"><strong>Sipariş Kodu: </strong>@Model.SiparisKodu</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-h-50"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table m-t-30">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Açıklama</th>
+                                        <th>Adet</th>
+                                        <th>Tutar</th>
+                                        <th>Toplam</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int j = 1; }
+                                    @foreach (var item in Model.SiparisUrunleri)
+                                    {
+                                        <tr>
+                                            <td>@j</td>
+                                            <td>@item.UrunBaslik</td>
+                                            <td>@item.Adet</td>
+                                            <td>@string.Format("{0:C}", item.Tutar / item.Adet)</td>
+                                            <td>@string.Format("{0:C}", item.Tutar)</td>
+                                        </tr>
+                                        j++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                @{
+                    decimal araToplam = Model.SiparisUrunleri.Sum(q => q.Tutar) - Model.IskontoTutar;
+                    decimal kdvTutar = araToplam * 18 / 100;
+                }
+                <div class="row" style="border-radius: 0px;">
+                    <div class="col-md-3 col-md-offset-9">
+                        
+                        <p class="text-right"><b>TOPLAM:</b> @string.Format("{0:C}", Model.SiparisUrunleri.Sum(q => q.Tutar))</p>
+                        @{
+                            if (Model.Iskonto > 0)
+                            {
+                                <p class="text-right">İSKONTO: (%@Model.Iskonto) <span class="text-success">-@string.Format("{0:C}", @Model.IskontoTutar) </span></p>
+                            }
+                        }
+                        <p class="text-right"><b>Ara Toplam :  @string.Format("{0:C}", araToplam)</b></p>
+                        <p class="text-right"><b>KDV: (%@Model.Kdv)</b> @string.Format("{0:C}", kdvTutar)</p>
+                        <hr>
+                        
+                        <h3 class="text-right">@string.Format("{0:C}", Model.SiparisToplami)</h3>
+                    </div>
+                </div>
+                <hr>
+                <div class="hidden-print">
+                    <div class="pull-right">
+                        <a href="javascript:print();" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

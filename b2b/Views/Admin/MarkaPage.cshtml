@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "MarkaPage";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+@model List<B2B.Models.Entity.BRANDS>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="btn-group pull-right m-t-15">
+                <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light editMarka" aria-expanded="false" href="/Admin/MarkaPageEkle">Marka Ekle <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">Marka Ekle - Düzenle - Listele</h4>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/Admin/Index">Ana sayfa</a>
+                </li>
+                <li>
+                    Marka Ekle - Düzenle - Listele
+                </li>
+            </ol>
+
+        </div>
+
+    </div>
+    <!-- Page-Title -->
+
+    <div class="panel">
+
+        <div class="panel-body">
+
+            <div class="">
+                <table class="table table-actions-bar dataTable table-striped table-bordered" id="Table1">
+                    <thead>
+                        <tr>
+                            <th>Marka</th>
+                            <th>Marka şuna ait</th>
+                            <th>Eylemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.Id">
+                                <td>@item.Marka</td>
+                                <td>@Html.Action("ModelinAitOlduguMarka", "Admin", new { id = item.MarkaAltId })</td>
+                                <td class="actions">
+                                    <button class="btn btn-icon waves-effect waves-light btn-warning editMarka" href="/Admin/MarkaPageGoster/@item.Id"> <i class="fa fa-pencil"></i> </button>
+                                    <button class="btn btn-icon waves-effect waves-light btn-danger" onclick="javascript: sil(@item.Id)"> <i class="fa fa-trash-o"></i> </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- end: page -->
+
+    </div> <!-- end Panel -->
+    <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Markalar</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" id="closeModal" class="btn btn-danger waves-effect" data-dismiss="modal">İptal</button>
+                    <button type="button" id="saveChanges" class="btn btn-success waves-effect waves-light">Değişiklikleri Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal -->
+    <!-- Datatable js -->
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+    <!-- Data table init -->
+    <script src="/assets/pages/datatables.init.js"></script>
+    <script type="text/javascript">
+        TableManageButtons.init();
+    </script>
+
+    <script>
+        $('#saveChanges').click(function () {
+            if (formCtrl() == true) {
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: '@Url.Content("~/")Admin/MarkaKaydetveyaGuncelle',
+                    data: {
+                        'Id': $('#Id').val(),
+                        'Marka': $('#Marka').val(),
+                        'MarkaAltId': $('#MarkaAltId').val()
+                    },
+                    success: function (d) {
+                        if (d.Error == "success") {
+                            swal("Başarılı!", d.ReturnMsg, d.Error);
+                            $('#con-close-modal').modal('toggle');
+                            setTimeout(function () { location.reload(); }, 3000);
+                        }
+                        else {
+
+                            $('#con-close-modal').modal('toggle');
+                        }
+                    }
+                });
+            }
+        });
+
+        function formCtrl() {
+            var r = true;
+            $('.formCtrl').each(function (i, key) {
+                if ($(this).val() == "") {
+                    alert($(this).data('errorinfo') + ' boş bırakılamaz.');
+                    r = false;
+                }
+            });
+            return r;
+        }
+
+        $('.editMarka').on('click', function (e) {
+            e.preventDefault();
+            $('#con-close-modal').modal('show').find('.modal-body').load($(this).attr('href'));
+        });
+    </script>
+    <script>
+
+        function sil(id) {
+            $.ajax({
+                async: false, type: "GET", url: '@Url.Content("~/")Admin/MarkaSil', data: { 'id': id, },
+                success: function (d) {
+                    swal("Bilgi!", d.ReturnMsg, d.Error);
+                    if (d.Error == "success") {
+                        $('#' + id).remove();
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Sweet-Alert  -->
+    <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assets/pages/jquery.sweet-alert.init.js"></script>

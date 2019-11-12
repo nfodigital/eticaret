@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "UrunleriListele";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+@model List<B2B.Models.Entity.PRODUCTS>
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ürünleri listele</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/Admin/Index">Ana sayfa</a>
+            </li>
+            <li>
+                Ürünleri listele
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="panel">
+
+    <div class="panel-body">
+
+        <table class="table table-actions-bar dataTable  table-bordered">
+            <thead>
+                <tr>
+
+                    <th>Ürün Adı</th>
+                    <th>Ürün Fiyatı</th>
+                    <th>Ürün Kodu</th>
+                    <th>Eylemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="Rows-@item.Id" style="@{if (item.StoktanDus == 1 && item.Stok <= 0) {<text>background-color:red;color:white</text>} else if (item.StoktanDus==1 && item.Stok<10) {<text>background-color:#ffff99;color:black</text>} }">
+                        <td>@item.UrunAdi</td>
+                        <td>@string.Format("{0:C}", item.UrunFiyat)</td>
+                        <td>@item.UrunKodu</td>
+                        <td class="actions">
+                            <button class="btn btn-icon waves-effect waves-light btn-warning hrefGo" href="/Admin/UrunDuzenlePage/@item.Id"> <i class="fa fa-wrench"></i> </button>
+                            <button class="btn btn-icon waves-effect btn-default waves-light" onclick="javascript:makeFav(@item.Id);"> <i class="fa fa-heart"></i> </button>
+                            <button class="btn btn-icon waves-effect waves-light btn-danger" onclick="javascript: deleteRow(@item.Id);"> <i class="fa fa-remove"></i> </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <!-- end: page -->
+
+</div> <!-- end Panel -->
+<script>
+    $('[data-toggle="tooltip"]').tooltip();
+    function deleteRow(id) {
+        swal({ title: "Ürün Silinecek!", text: "Bu ürünü gerçekten silmek istiyor musunuz?", type: "warning", showCancelButton: true, confirmButtonColor: "#DD6B55", confirmButtonText: "Evet, Onaylıyorum!", cancelButtonText: "Vazgeç!", closeOnConfirm: false, closeOnCancel: false },
+        function (isConfirm) {
+            if (isConfirm) {
+                $.get('@Url.Content("~/")Admin/UrunSil', {
+                    'id': id
+                }, function (d) {
+                    swal("Bilgi", d.ReturnMsg, d.Error);
+                    if (d.ReturnValue == id) {
+                        $('#Rows-' + id).remove();
+                    }
+                });
+            }
+            else {swal("İptal", "İsteğiniz üzere işlem iptal edildi", "error");}
+        });
+    }
+    function makeFav(id) {
+        $.get('@Url.Content("~/")Admin/MakeFav', {
+            'id': id
+        }, function(d) {
+            swal("Bilgi", d.ReturnMsg, d.Error);
+        });
+    }
+    $('.hrefGo').click(function() {
+        var win = window.open($(this).attr('href'), '_blank');
+        if (win) {
+            win.focus();
+        } else {
+            swal("Dikkat", 'Lütfen açılır pencerelere bu site için izin veriniz!', "error");
+        }
+    });
+</script>
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>

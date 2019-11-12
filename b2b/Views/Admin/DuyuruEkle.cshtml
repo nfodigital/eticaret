@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Duyuru Ekle";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+
+            <h4 class="m-b-20 header-title"><b>Duyuru İçeriği</b></h4>
+            <div class="form-group">
+                <input type="text" id="duyuruCont" class="form-control" placeholder="Duyuru içeriği" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info btn-large form-control" id="duyuruEkleCmd"> Duyuru Ekle</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- End row -->
+
+<script>
+    $('#duyuruEkleCmd').click(function () {
+        if ($('#duyuruCont').val() != "") {
+            $.post('@Url.Content("~/")Admin/DuyuruEkle', {
+                'Duyuru': $('#duyuruCont').val(),
+                'EklenmeTarihi': ''
+            }, function (d) {
+                swal("Bilgi", d.ReturnMsg, d.Error);
+                if (d.Error == "success") {
+                    $('#duyuruCont').val("");
+                }
+            });
+
+        }
+        else {
+            swal("Hata", "Duyuru içeriği boş bırakılamaz", "error");
+        }
+    });
+</script>
+
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>

@@ -1,0 +1,385 @@
+﻿@{
+    ViewBag.Title = "SiparisDuzenle";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+@model B2B.Dto.SiparisDuzenleDto
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group pull-right m-t-15">
+            <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Eylemler <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/Admin/SiparisYazdir/@Model.Siparis.Id">Siparişi Yazdır</a></li>
+            </ul>
+        </div>
+        <h4 class="page-title">AnaSayfa</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/Admin/SiparisleriListele">Siparişler</a>
+            </li>
+            <li class="active">Sipariş Düzenle
+            </li>
+        </ol>
+
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <form>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-box">
+                        <h5 class="text-muted text-uppercase m-t-0 m-b-20"><b>Sipariş Bilgileri</b></h5>
+                        <div class="form-group m-b-20">
+                            <label>Sipariş No <span class="text-danger">*</span></label>
+                            <input readonly="readonly" type="text" class="form-control" value="@Model.Siparis.SiparisNo">
+                        </div>
+                        <div class="form-group m-b-20">
+                            <label>Ürünler <span class="text-danger">*</span></label>
+                            <div class="col-sm-12">
+                                <div class="card-box">
+                                    <div class="table-rep-plugin">
+                                        <div class="table-responsive" data-pattern="priority-columns">
+                                            <table id="products" class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fotoğraf</th>
+                                                        <th>Ürün Adı</th>
+                                                        <th>Ürün kodu</th>
+                                                        <th>Adet</th>
+                                                        <th>Tutar</th>
+                                                        <th>Toplam</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.Siparis.SiparisUrunleri)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <img src="/Upload/imajlar/@Html.Action("UrunFotografiVer", "Products", new { id = item.UrunId })" id="row-@item.Id" data-fotoUrl="@item.UrunId" height="30" />
+                                                            </td>
+
+                                                            <td>@Html.Action("UrunAdiVer", "Products", new { UrunId = item.UrunId })</td>
+                                                            <td>@Html.Action("UrunKoduVer", "Products", new { urunId = item.UrunId })</td>
+                                                            <td>@item.Adet</td>
+                                                            <td>@string.Format("{0:C}", item.KalemTutar / item.Adet)</td>
+                                                            <td>@string.Format("{0:C}", item.KalemTutar)</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    @{
+                                                        decimal IskontoluTutar = Model.Siparis.SiparisUrunleri.Sum(q => q.KalemTutar) - Model.Siparis.IskontoTutar;
+                                                        decimal KdvTutari = IskontoluTutar * 18 / 100;
+                                                    }
+                                                    <tr>
+                                                        <td colspan="5" style="text-align: right"><b>Toplam</b></td>
+                                                        <td colspan="6">@string.Format("{0:C}", Model.Siparis.SiparisUrunleri.Sum(q => q.KalemTutar))</td>
+                                                    </tr>
+                                                    @{
+
+                                                        if (Model.Siparis.SiparisIskontoOrani > 0)
+                                                        {
+                                                            <tr>
+                                                                <td colspan="5" style="text-align: right"><b>İskonto (%@Model.Siparis.SiparisIskontoOrani)</b>
+                                                                <td colspan="6"><span class="text-danger">- @string.Format("{0:C}", Model.Siparis.IskontoTutar)</span></td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    <tr>
+                                                        <td colspan="5" style="text-align: right"><b>Ara Toplam</b>
+                                                        <td colspan="6">@string.Format("{0:C}", IskontoluTutar)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="text-align: right"><b>K.D.V (%@Model.Siparis.KdvOrani)</b>
+                                                        <td colspan="6">@string.Format("{0:C}", KdvTutari)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="text-align: right">
+                                                            <b>Genel Toplam</b>
+                                                        </td>
+                                                        <td colspan="6" style="text-align: left">@string.Format("{0:C}", Model.Siparis.SiparisToplami)</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label>Sipariş Durumu </label>
+
+                            <select class="form-control select2" id="SiparisDurumu">
+                                @foreach (var item in Model.SiparisDurumlari)
+                                {
+                                    <option value="@item.Aktif">@item.SiparisDurumu</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="form-group m-b-20">
+                            <label>Siparişi veren Firma</label>
+                            <input readonly="readonly" type="text" class="form-control" value="@Html.Action("FirmaAdiVer", "CommonFunctions", new { FirmaId = Model.Siparis.FirmaId })">
+                        </div>
+                        <div class="form-group m-b-20">
+                            <label>Siparişi veren Firma Kullanıcısı</label>
+                            <input readonly="readonly" type="text" class="form-control" value="@Html.Action("KullanicininAdiSoyadi", "CommonFunctions", new { UserId = Model.Siparis.SiparisVeren })">
+                        </div>
+                        <div class="form-group m-b-20">
+                            <label class="m-b-15">Tarih ve Saat</label>
+                            <br />
+                            @Model.Siparis.SiparisTarihi
+                        </div>
+                        <div class="form-group m-b-10">
+                            <label>Ödeme</label>
+                            <input type="text" class="form-control" readonly value="@Model.Siparis.OdemeTipi">
+                        </div>
+                        <div class="form-group m-b-10">
+                            <label>Sipariş Notları</label>
+                            <textarea class="form-control" rows="3" readonly>@Model.Siparis.SiparisNotlari</textarea>
+                        </div>
+                        <div class="form-group m-b-10">
+                            <label>Siparişi Veren Kişi</label>
+                            <textarea class="form-control" rows="3" readonly>@Model.Siparis.SiparisiVerenAdSoyad</textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h3>Ödeme Geçmişi</h3>
+                            <div class="table-responsive" data-pattern="priority-columns">
+                                <table id="OdemeGecmisi" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Ödeme Tipi</th>
+                                            <th>Tutar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="odemeGecmisiRows">
+                                        @foreach (var item in Model.Siparis.SipariseAitOdemeler)
+                                        {
+                                            <tr id="odemeId-@item.Id">
+                                                <td>@item.OdemeTipi
+                                                    <button href="/Admin/OdemeEkle_Page" type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" aria-expanded="false" data-toggle="tooltip" data-placement="top" data-original-title="Ekle" onclick="deletePayment(@item.Id);"><i class="fa fa-minus-circle"></i></button>
+                                                </td>
+                                                <td>@string.Format("{0:C}", item.OdemeTutari)</td>
+                                            </tr>   
+                                        }
+
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><span class="pull-right">Kalan :</span></td>
+                                            <td colspan="2">@string.Format("{0:C}", Model.Siparis.SiparisToplami - Model.Siparis.SipariseAitOdemeler.Sum(q => q.OdemeTutari))</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="btn-group pull-left m-t-15">
+                                <button href="/Admin/OdemeEkle_Page" type="button" class="btn btn-default dropdown-toggle waves-effect waves-light hrefWin" aria-expanded="false" data-toggle="tooltip" data-placement="top" data-original-title="Ekle"><i class="fa fa-plus-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center p-20">
+                        <button type="button" class="btn w-sm btn-white waves-effect" onclick="javascript:history.back(-1);">Geri</button>
+                        <button type="button" class="btn w-sm btn-danger waves-effect waves-light" id="SiparisiSil">
+                            Siparişi Sil
+                        </button>
+
+                        <button type="button" class="btn w-sm btn-purple waves-effect" id="faturasizaDonustur" @{ if (Model.Siparis.ManuelTutar == 1)
+                                                                                                                  {<text>disabled="disabled"</text>}}>
+                            Bu siparişi faturasız satışa dönüştür.</button>
+                        <button type="button" class="btn w-sm btn-purple waves-effect" id="EkstraIskontoUygula">Nakit %10 Iskonto Uygula</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="hrefModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Ödeme yapılıyor</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeModal" class="btn btn-danger waves-effect" data-dismiss="modal">İptal</button>
+                <button type="button" id="DuzenleKaydet" class="btn btn-success waves-effect waves-light">Ödeme Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function deletePayment(id) 
+    {
+        swal({
+            title: "Emin misiniz?",
+            text: "Ödemeyi silmek istediğinize emin misiniz?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Evet, eminim",
+            cancelButtonText: "Vazgeç!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+ function(isConfirm){
+     if (isConfirm) {
+         $.post('@Url.Content("~/")Admin/OdemeSil', {
+             'id' : id
+         }, function (d) {
+             if(d.Error=="success") {
+                 swal("Başarılı", d.ReturnMsg, d.Error); window.location.reload();
+             }
+         });
+     } else {
+         swal("İptal", "İsteğiniz üzere işlem iptal edildi", "error");
+     }
+ });
+}
+$('#DuzenleKaydet').click(function() {
+    if($('#OdemeTipleri option:selected').val() != "-1" && $('#Tutar').val() != "") {
+        $.post('@Url.Content("~/")Admin/SipariseOdemeEkle', {
+            'OrderId' : @Model.Siparis.Id,
+            'OdemeTipi' : $('#OdemeTipleri option:selected').val(),
+            'OdemeTutari' : $('#Tutar').val()
+        }, function (d) {
+            $('#hrefModal').modal('toggle');
+            if(d.Error == "success") {
+                window.location.reload();
+            }
+            swal("Dikkat", d.ReturnMsg, d.Error);
+        });
+    }
+    else { alert('Lütfen tüm alanları doldurun'); }
+});
+$('.hrefWin').on('click', function (e) {
+    e.preventDefault();
+    $('#hrefModal').modal('show').find('.modal-body').load($(this).attr('href'));
+});
+
+$("img[data-fotoUrl]").each(function () {
+    $.get('@Url.Content("~/")Products/FotografVer', {
+        'id': $(this).attr('data-fotoUrl')
+    }, function (d) {
+        $(this).attr("src", d);
+    });
+});
+
+$('#SiparisDurumu').val(@Model.Siparis.SiparisDurumu);
+    $('#SiparisDurumu').change(function () {
+        
+        @*var toplamTutar = parseFloat(@Model.Siparis.SiparisToplami);
+        var toplamOdenen = parseFloat(@Model.Siparis.SipariseAitOdemeler.Sum(q => q.OdemeTutari));
+
+        if($('#SiparisDurumu option:selected').val() != 1) {
+            doJob();
+        }
+    else if($('#SiparisDurumu option:selected').text() == "SİPARİŞ TESLİM EDİLDİ")
+        {
+            if(toplamTutar - toplamOdenen == 0)
+            {
+                doJob();
+            }
+            else {
+                swal("o-Oh", "Sipariş Ödemesi Tamamlanmadan, siparişi tamamlandı olarak işaretleyemezsiniz!\nBu siparişe ait henüz ödenmemiş bakiye bulunuyor.\nÖdeme Yapmak için en aşağıda bulunan ödeme geçmişi ekranını kullanınız." , "error");
+                $('#SiparisDurumu').val(@Model.Siparis.SiparisDurumu);
+            }
+        }*@
+    });
+
+    function doJob() {
+        $.post('@Url.Content("~/")Admin/SiparisDurumDegis', {
+        'id': @Model.Siparis.Id,
+        'SiparisDurumu' : $('#SiparisDurumu').val()
+    }, function (d) {
+        if(d.Error==0) {
+            swal("Onay", d.ReturnMsg + "\n'" + $('#SiparisDurumu option:selected').text() + "'", "success");
+        }
+        else {
+            swal("Başarısız!", "Üzgünüm, bir hata oluştu, lütfen yöneticiye şu durumu bildirin:\n" + d.ReturnMsg , "warning");
+        }
+    });
+}
+
+function ekstraIndirimUygula() {
+    var tutar;
+    do {
+        tutar=prompt("İskonto oranı giriniz ÖRN: '10'");
+    }
+    while(isNaN(tutar)) {
+        $.get('@Url.Content("~/")Admin/EkstraIskontoUygula', {
+            'orderid': @Model.Siparis.Id,
+            'IskontoOrani' : tutar
+        }, function (d) {
+            if(d.Error=="error") {
+                swal("Hata", d.ReturnMsg, "warning");
+            }
+            else if(d.Error=="success") {
+                swal("Onay", d.ReturnMsg, "success");
+            }
+        });
+    }
+}
+$('#EkstraIskontoUygula').click(function(){
+    ekstraIndirimUygula();
+});
+$('#faturasizaDonustur').click(function() {
+    $.get('@Url.Content("~/")Admin/FaturasizaDonustur', {
+        'orderid': @Model.Siparis.Id,
+        'NakitIskontoOrani' : '0'
+    }, function (d) {
+        if(d.Error=="error") {
+            swal("Hata", d.ReturnMsg, "warning");
+        }
+        else if(d.Error=="success") {
+            swal("Onay", d.ReturnMsg, "success");
+        }
+
+    });
+});
+$('#SiparisiSil').click(function() {
+    $.get('@Url.Content("~/")Admin/SiparisiSil', {
+            'orderid': @Model.Siparis.Id,
+        }, function (d) {
+            if(d.Error=="error") {
+                swal("Hata", d.ReturnMsg, "warning");
+            }
+            else if(d.Error=="success") {
+                swal("Onay", d.ReturnMsg, "success");
+            }
+
+        });
+    })
+
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>

@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "OdemeYap";
+    Layout = "~/Views/_Master.cshtml";
+}
+<div id="kullanim-kosullari" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close m-t-5" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Kullanım Koşulları</h3>
+                </div>
+                <div class="panel-body">
+                    <h3>Giriş</h3>
+                    <p>Paha Biçilemez Şehirler web sitesine hoş geldiniz. Paha Biçilemez Şehirler web sitesi (“Site”), MasterCard Europe sprl ("MasterCard") tarafından MasterCard sahiplerine deneyimler, teklifler ve içerikler sunan bir promosyon programıdır. Siteyi kullanmadan önce lütfen kullanım şartlarını dikkatlice okuyunuz ve bunları saklayınız. Siteye erişim sağladığınızda, kullanım şartlarını ve Sitede MasterCard tarafından yayınlanabilecek ve zaman içerisinde tadil edilebilecek ilave tüm şartları (müştereken “Kullanım Şartları” olarak anılacaktır) kabul etmiş olursunuz. Siteyi kullanmanızla ilgili şartlar Kullanım Şartlarında belirtilmiştir. SİTEYİ KULLANDIĞINIZDA, KULLANIM ŞARTLARINI OKUDUĞUNUZU, ANLADIĞINIZI VE BU ŞARTLARA TABİ OLACAĞINIZI KABUL ETMİŞ OLURSUNUZ. KULLANIM ŞARTLARINA İLİŞKİN HERHANGİ BİR SORUNUZ VARSA SİTEYİ KULLANMADAN ÖNCE BİR AVUKATA DANIŞMANIZDA FAYDA VARDIR.</p>
+                    <p>Kullanım Şartlarını kabul etmiyorsanız, Siteye erişim sağlamayın veya kullanmayın.
+
+Kullanım Şartlarında geçen “siz” ve “sizin” kelimeleri, aşağıda tanımlandığı şekilde Siteye erişim sağlayan ve/veya Programa katılmak için kayıt yapan kişiyi ifade etmektedir. “Biz”, “bizi” ve “bizim” kelimeleri ise MasterCard’ı ifade eder. “Site”, www.priceless.com/istanbul adresindeki web sitesini veya Paha Biçilemez Şehirler programı (“Program”) için hazırlayacağımız başka herhangi bir web sitesini ifade eder.</p>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ana Sayfa</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Ödeme</a>
+            </li>
+            <li class="active">Ödeme Yap
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-7">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>KREDİ KARTLARI İLE İLGİLİ GENEL BİLGİLER</b></h4>
+            <p class="text-muted font-13 m-b-30">
+                Kredi kartıyla ödeme yapmanız takdirde, buradaki uyarıları dikkate almış sayılırsınız.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-sm-5">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>ÖDEME YAP</b></h4>
+            <p class="text-muted m-b-30 font-13">
+                Kredi Kartınızı kullanın ve tutar belirterek ödemenizi gerçekleştirin. Lütfen gerekli alanların tümünü doldurunuz.
+            </p>
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="kartno">Kart No</label>
+                            <div class="col-md-8">
+                                <input type="text" id="kartno" name="kartno" data-mask="9999-9999-9999-9999" class="form-control" placeholder="Kartınızın Üzerinde yazan 14 haneli numara">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="adsoyad">Ad Soyad</label>
+                            <div class="col-md-8">
+                                <input type="text" id="adsoyad" name="adsoyad" class="form-control" placeholder="Kredi Kartı üzerinde yazan isim soyisim">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">SKT AY/YIL</label>
+                            <div class="col-md-4">
+                                <select class="form-control">
+                                    @{ 
+                                        for (int i = 1; i < 13; i++)
+                                        {
+                                        <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control">
+                                    @{
+                                        for (int j = 2016; j < 2024; j++)
+                                        {
+                                        <option value="@j">@j</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="adsoyad">CVV</label>
+                            <div class="col-md-2">
+                                <input type="text" id="cvv" name="cvv" data-mask="999" class="form-control" placeholder="CVV">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="adsoyad">Tutar</label>
+                            <div class="col-md-3">
+                                <input type="text" placeholder="" data-v-max="9999" data-v-min="0" class="form-control autonumber">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="adsoyad"></label>
+                            <div class="col-md-8">
+                                <div class="checkbox checkbox-primary">
+                                    <input id="chkbox-usage" type="checkbox">
+                                    <label for="chkbox-usage">
+                                        <a href="#" data-toggle="modal" data-target="#kullanim-kosullari">Kullanım Koşullarını</a> okudum, kabul ediyorum.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="adsoyad"></label>
+                            <div class="col-md-3">
+                                <button class="btn btn-info waves-effect waves-light"> <i class="md md-credit-card m-r-5"></i> <span>Ödemeyi Yap</span> </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Bootstrap inputmask -->
+<script src="/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+<!-- Auto numeric -->
+<script src="/assets/plugins/autoNumeric/autoNumeric.js" type="text/javascript"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.autonumber').autoNumeric('init');
+    });
+</script>

@@ -1,0 +1,451 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_NewMaster.cshtml";
+}
+@model B2B.Dto.SepetDto
+@{
+    B2B.Dto.UserHolder UserInfo = new B2B.Dto.UserHolder();
+    if (Session["UserInfo"] == null)
+    {
+        UserInfo.UserId = 0;
+    }
+    else
+    {
+        UserInfo = (B2B.Dto.UserHolder)Session["UserInfo"];
+    }
+}
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ana Sayfa</h4>
+        <ol class="breadcrumb">
+            <li>
+                Siparişler
+            </li>
+            <li class="active">
+                Sepetim
+            </li>
+        </ol>
+
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-actions-bar dataTable table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Ürün Kodu</th>
+                            <th>Marka</th>
+                            <th>Adet</th>
+                            <th>Fiyat</th>
+                            <th>Toplam</th>
+                            <th style="min-width: 12px;">İşlem</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+                            int j = 0;
+                        }
+                        <!--sepet listeleme başlangıcı-->
+                        @foreach (var item in Model.Urunler)
+                        {
+                            <tr id="row-@item.UrunId">
+                                <td><a href="/Products/ProductDetails/@item.UrunId">@item.UrunBaslik</a></td>
+                                <td><a href="/Products/ProductDetails/@item.UrunId">@item.UrunKodu</a></td>
+                                <td>
+                                    <b>@item.Marka</b>
+                                </td>
+                                <td>@item.Adet</td>
+                                <td>@string.Format("{0:C}", item.UrunFiyat)</td>
+                                <td data-Tutar="@item.UrunFiyat" data-Adet="@item.Adet" class="TutarClass">
+                                    @string.Format("{0:C}", item.Adet * item.UrunFiyat)
+                                </td>
+                                <td>
+                                    <a href="#" onclick="SepettenSil(@item.UrunId);" class="table-action-btn"><i class="md md-delete"></i></a>
+                                </td>
+                            </tr>
+                            j++;
+                        }
+                        <!--sepet listeleme bitişi-->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6">
+                                <strong class="pull-right">Toplam Tutar</strong>
+                            </td>
+                            <td colspan="7">
+                                <span class="pull-left" id="toplamTutar">Yükleniyor..</span>
+                            </td>
+                        </tr>
+                        @{ if (UserInfo.FirmaIskontoOrani > 0)
+                            {
+                        <!-- iskonto -->
+                                <tr>
+                                    <td colspan="6">
+                                        <strong class="pull-right">
+                                            İskonto (%@UserInfo.FirmaIskontoOrani) 
+                                        </strong>
+                                    </td>
+                                    <td colspan="7"><span class="text-success" id="iskontoTutar">Yükleniyor..</span></td>
+                                </tr>
+                        <!-- iskonto -->
+                            }
+                        }
+                        <tr>
+                            <td colspan="6">
+                                <strong class="pull-right">Ara Toplam</strong>
+                            </td>
+                            <td colspan="7">
+                                <span class="pull-left" id="aratoplam">Yükleniyor..</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <strong class="pull-right">
+                                    KDV
+                                </strong>
+                            </td>
+                            <td colspan="7">
+                                <span class="pull-left text-danger" id="kdv">
+                                    Yükleniyor..
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <strong class="pull-right">
+                                    Genel Tutar
+                                </strong>
+                            </td>
+                            <td colspan="7">
+                                <strong class="pull-left text-custom text-danger" id="genelTutar">
+                                    Yükleniyor..
+                                </strong>
+                            </td>
+                        </tr>
+                        
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card-box">
+            <div class="form-group">
+                <label for="GonderimTipleri">Gönderim Tipini Seçiniz</label>
+                <select class="form-control" id="GonderimTipleri">
+                    <option value="-1">Gönderim Tipini Seçiniz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="KullaniciAdresleri">Adres</label>
+                <select class="form-control" id="KullaniciAdresleri">
+                    <option value="-1">Adres Seçiniz</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display:none" id="adresDiv">
+                <label for="DigerAdres">Kayıtlı Adresler dışında bir adres girin</label>
+                <input type="text" class="form-control" id="DigerAdres" placeholder="Başka bir adres giriniz." required="required">
+            </div>
+            <div class="form-group">
+                <label for="OdemeTipleri">Ödeme Tipi</label>
+                <select class="form-control" id="OdemeTipleri">
+                    <option value="-1">
+                        Lütfen Ödeme tipi Seçiniz
+                    </option>
+                    <option value="4">KREDİ KARTI</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="OdemeTipleri">Bu alışverişinize ait notlar</label>
+                <textarea class="form-control" rows="3"
+                          placeholder="Sipariş notları" name="siparisNotlari" id="siparisNotlari"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>SİPARİŞİ TAMAMLA</b></h4>
+            <p class="text-muted m-b-15 font-13">
+                <span id="OdemeAciklamasi">
+
+                </span>
+            </p>
+            <span id="OdemeIcerigi">
+                <button class="ladda-button btn btn-lg btn-block btn-primary waves-light waves-effect" data-style="expand-left" id="CmdSiparisVer">
+                    Siparişi Tamamla
+                </button>
+            </span>
+
+        </div>
+    </div>
+</div>
+<div class="row" id="cariHesapBilgileri" style="display:none">
+    <div class="col-md-6">
+        <div class="widget-panel widget-style-2 bg-white">
+            <i class="md md-account-balance-wallet text-primary"></i>
+            <h2 class="m-0 text-dark counter font-600" id="bakiyeLabel">Sorgulanıyor..</h2>
+            <div class="text-muted m-t-5">Mevcut Bakiyeniz</div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="widget-panel widget-style-2 bg-white">
+            <i class="ti-minus text-primary"></i>
+            <h2 class="m-0 text-dark counter font-600" id="kalacakOlan">Sorgulanıyor..</h2>
+            <div class="text-danger m-t-5">Sipariş sonrası kalacak bakiyeniz</div>
+        </div>
+    </div>
+</div>
+<script src="/assets/plugins/ladda-buttons/js/spin.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.jquery.min.js"></script>
+<script>
+    // Bind normal buttons
+    $('.ladda-button').ladda('bind', { timeout: 5000 });
+
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+    });
+    var l = $('.ladda-button-demo').ladda();
+    renewRows();
+    $.get('@Url.Content("~/")Hesap/AdresBilgileriniListele', {
+        'UserId': @UserInfo.UserId }, function (d) {
+            $.each(d, function(i, val){
+                $('#KullaniciAdresleri').append("<option value="+ d[i].Adres +">"+d[i].Adres+"</option>")
+            });
+            $('#KullaniciAdresleri').append('<option value="-1">Diğer..</option>')
+        });
+
+    $.get('@Url.Content("~/")Siparis/KalanBakiyeSorgula?kalanHesaplansinmi=0', {
+        'firmaId': @UserInfo.FirmaId }, function (d) {
+            $('#bakiyeLabel').html(d);
+        });
+
+    $.get('@Url.Content("~/")Siparis/KalanBakiyeSorgula?kalanHesaplansinmi=1', {
+        'firmaId': @UserInfo.FirmaId }, function (d) {
+            $('#kalacakOlan').html(d);
+        });
+
+    $.get('@Url.Content("~/")Odeme/OdemeTipleri', {
+    }, function (d) {
+        $.each(d, function(i, val) {
+            $('#OdemeTipleri').append("<option value="+ d[i].Id +">"+d[i].OdemeAdi+"</option>")
+        });
+    });
+
+    $.get('@Url.Content("~/")CommonFunctions/GonderimTipleri', {
+    }, function (d) {
+        $.each(d, function(i, val) {
+            $('#GonderimTipleri').append("<option value="+ d[i].Id +">"+d[i].GonderiTipi+"</option>")
+        });
+    });
+
+    $('#KullaniciAdresleri').change(function() {
+        if($('#KullaniciAdresleri option:selected').val() == "-1") {
+            $('#adresDiv').show();
+        }
+        else {
+            $('#adresDiv').hide();
+        }
+    });
+
+    $('#OdemeTipleri').change(function() {
+        if($(this).val()=='1') {
+            $('#OdemeAciklamasi').html('Kredi kartı ile ödeme yapmak için aşağıdaki formu doldurunuz.');
+        }
+        else if($(this).val()=='2') {
+            $('#OdemeAciklamasi').html('Havale ile ödeme.');
+        }
+        else if($(this).val()=='3') {
+            $('#OdemeAciklamasi').html('Cari Hesap ile ödeme.');
+        }
+        else if($('#OdemeTipleri option:selected').text()=='KREDİ KARTI') {
+            $('#OdemeAciklamasi').html('Kredi kartı ile ödeme.');
+        }
+        else if($('#OdemeTipleri option:selected').text()=='NAKİT') {
+            $('#OdemeAciklamasi').html('Nakit ödeme.');
+        }
+    });
+    function siparisOnayi() {
+        
+        if($('#OdemeTipleri option:selected').val() == "-1") {
+            swal("Hata!", "Lütfen ödeme tipini seçiniz", "error");
+            return false;
+        }
+        if($('#GonderimTipleri option:selected').val() == "-1") {
+            swal("Hata!", "Lütfen gönderim tipini seçiniz", "error");
+            return false;
+        }
+
+        if($('#KullaniciAdresleri option:selected').val() =="-1" && $('#DigerAdres').val() == "") {
+            swal("Hata!", "Lütfen adres bilgilerinizi giriniz", "error");
+            return false();
+        }
+        else {
+            return true;
+        }
+    }
+    $('#CmdSiparisVer').click(function () {
+        if(siparisOnayi()) {
+            var adres;
+            if($('#KullaniciAdresleri option:selected').val() == "-1") {
+                adres = $('#DigerAdres').val();
+            }
+            else {
+                adres  = $('#KullaniciAdresleri option:selected').text();
+            }
+            swal({
+                title: "Siparişinizi onaylıyor musunuz?",
+                text: "Sepetinizdeki ürünleri onaylamak için Siparişi Onaylıyorum butonuna basınız.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Evet, Siparişimi Onaylıyorum!",
+                cancelButtonText: "Vazgeç!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+function(isConfirm){
+    if (isConfirm) {
+        $.post('@Url.Content("~/")Siparis/YeniSiparisEkle', {
+            'odemeTipi' : $('#OdemeTipleri option:selected').text(),
+            'siparisNotlari' : $('#siparisNotlari').val(),
+            'Adres' : adres
+
+        }, function (d) {
+            if(d.Error=="success") {
+                swal("Tebrikler!", "Siparişiniz sisteme girildi", "success");
+            }
+            else if(d.Error=="HAVALE"){
+                swal({
+                    title: "Tebrikler! Siparişiniz sisteme girildi.",
+                    text: "Havale bilgileri sayfasına yönlendirileceksiniz.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                    imageUrl: "/assets/plugins/sweetalert/thumbs-up.jpg"
+                });
+                setTimeout(function(){ location.href="/Odeme/HavaleBilgileri"; }, 3000);
+
+            }
+            else if(d.Error=="NAKİT"){
+                swal({
+                    title: "Tebrikler! Siparişiniz sisteme girildi.",
+                    text: "Dikkat! Nakit ödemeniz onaylanmadıkça sistem siparişinizi yok sayacaktır.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                    imageUrl: "/assets/plugins/sweetalert/thumbs-up.jpg"
+                });
+                setTimeout(function(){ location.href="/Odeme/HavaleBilgileri"; }, 3000);
+
+            }
+            else if(d.Error=="KK") {
+                swal({
+                    title: "Yönlendiriliyorsunuz..",
+                    text: "Kredi Kartı sayfasına yönlendirileceksiniz.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                location.href="/Odeme/OdemeYap";
+            }
+            else if (d.Error=="BakiyeYetersiz") {
+                swal("Hata oluştu!", d.ReturnMsg, "error");
+            }
+            else {
+                swal("Bilgi", d.ReturnMsg, d.Error);
+            }
+        });
+
+    } else {
+        swal("İptal", "İsteğiniz üzere işlem iptal edildi", "error");
+    }
+});
+        }
+    });
+    
+    function SepettenSil(urunId) {
+        swal({
+            title: "Silmeyi Onaylıyor musunuz?",
+            text: "Sepetinizdeki bu ürünü silmek istediğinize emin misiniz?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Evet, Sepetten sil",
+            cancelButtonText: "Vazgeç!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+function(isConfirm){
+    if (isConfirm) {
+        $.post('@Url.Content("~/")Sepet/SepettenSil', {
+            'UrunId' : urunId
+        }, function (d) {
+            if(d.Error=="success") {
+                swal("Tebrikler!", d.ReturnMsg, d.Error);
+                $('#row-' + d.ReturnValue).remove();
+                $.get('@Url.Content("~/")Sepet/SepetiYenile', {
+                }, function (d) {
+                    $('#sepetClass').html(d);
+                    $('#SepettekiUrunSayisi').html($('#RefreshUrun').html())
+                    renewRows();
+                });
+            }
+        });
+    } else {
+        swal("İptal", "İsteğiniz üzere işlem iptal edildi", "error");
+    }
+});
+    }
+    function renewRows() {
+        $.get('@Url.Content("~/")Sepet/SepetHesabi', {
+        }, function (d) {
+            $('#kdv').html("+ " + d.KdvTutari.toFixed(2)+" ₺");
+            $('#toplamTutar').html(d.ToplamTutar.toFixed(2) +" ₺");
+            $('#aratoplam').html(d.AraToplam.toFixed(2) + " ₺");
+            $('#genelTutar').html(d.GenelTutar.toFixed(2) + " ₺");
+            $('#iskontoTutar').html("-" + d.IskontoTutari.toFixed(2) +" ₺");
+        });
+    }
+
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

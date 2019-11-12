@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Title = "MuhasebeIslemleri_Index";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+@model B2B.Models.Entity.COMPANIES
+<script>
+    function girdiDurum(tip) {
+        return tip == 1 ? "Tamamlandı" : "İşlem Bekliyor";
+    }
+</script>
+@{
+    string icon, r_color, r_state = "";
+
+    if (Model.CariHesapIzni == 1)
+    {
+        icon = "md-lock-open"; r_color = "text-success"; r_state = "Cari Alışverişini Kapat";
+    }
+    else { icon = "md-lock"; r_color = "text-danger"; r_state = "Cari Alışverişine Aç"; }
+}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box widget-inline">
+            <div class="row">
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-primary md md-add-shopping-cart"></i><b> @Model.FirmaSiparisleri.Count()</b></h3>
+                        <h4 class="text-muted">toplam sipariş</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-custom md md-account-balance-wallet"></i><b> @string.Format("{0:C}", Model.FirmaSiparisleri.Sum(q => q.SiparisToplami))</b></h3>
+                        <h4 class="text-muted">şimdiye dek siparişler tutarı</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-pink md md md-warning"></i><b> @string.Format("{0:C}", Model.FirmaMuhasebe.FirstOrDefault().Bakiye)</b></h3>
+                        <h4 class="text-muted">Bakiye</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center b-0">
+                        <h3><i class="text-purple md md-visibility"></i><b> @Model.ZiyaretSayisi</b></h3>
+                        <h4 class="text-muted">Toplam Ziyaretler</h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box widget-inline">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="text-danger md md-warning"></i><b> @Model.FirmaUyarilari.Count(q => q.UyariTipi == "odemeUyarisi")</b></h3>
+                        <h4 class="text-muted">toplam sipariş</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <div class="widget-inline-box text-center">
+                        <h3><i class="@r_color md @icon"></i><b> Cari Hesap</b></h3>
+                        <h4 class="text-muted">
+                            @{ if (Model.CariHesapIzni == 1)
+                                { <text>İzin Verildi</text> }
+                                else {<text>İzin Verilmiyor</text>} }
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+            <div class="btn-group m-t-15">
+                <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Filtreleme <span class="m-l-5"><i class="fa fa-filter"></i></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="?Filter=EksiHesaplar">Eksi Hesapları göster</a></li>
+                    <li><a href="?Filter=ArtiHesaplar">Artı Hesapları göster</a></li>
+                    <li class="divider"></li>
+                    <li><a href="?Filter=All">Tümünü Göster</a></li>
+                </ul>
+            </div>
+            <div class="btn-group m-t-15">
+                @{
+                    string lbl_uyariYazisi, lbl_uyariYazisiLink, lbl_HesapAyarlari;
+                    if (Model.FirmaUyarilari.Count(q => q.UyariTipi == "odemeUyarisi") > 0)
+                    {
+                        lbl_uyariYazisi = "Müşteri ekranında ödeme uyarısını kaldır";
+                        lbl_uyariYazisiLink = "javascript:deleteWarning(" + Model.FirmaUyarilari.FirstOrDefault().Id + ");";
+                    }
+
+                    else {
+                        lbl_uyariYazisi = "Müşteri ekranında ödeme uyarısı göster";
+                        lbl_uyariYazisiLink = "#";
+                    }
+                }
+                <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">İşlemler <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="@lbl_uyariYazisiLink" @if (lbl_uyariYazisiLink == "#") { <text> data-target="#odemeUyarisiModal" data-toggle="modal" </text>  }>@lbl_uyariYazisi <span class="badge badge-xs badge-danger" id="BildirimSayisi">@Model.FirmaUyarilari.Count(q => q.UyariTipi == "odemeUyarisi")</span></a></li>
+                    <li><a href="#" data-target="#vadeGunuUyarisiModal" data-toggle="modal">Vade Günü Belirle</a></li>
+                    <li><a href="javascript:CariDurumDegis(@Model.Id);">@r_state</a></li>
+                    <li class="divider"></li>
+                    <li>
+                        @{
+                            if (Model.Aktif == 0)
+                            {
+                                <text><a href='javascript:breeze(@Model.Id, "ac");' id='HesaplariDondur'>Firmanın tüm hesaplarını aç</a></text>
+                            }
+                            else
+                            {
+                                <text><a href='javascript:breeze(@Model.Id, "dondur");' id='HesaplariDondur'>Firmanın tüm hesaplarını dondur</a></text>
+    }
+}
+                    </li>
+                </ul>
+            </div>
+            <div class="row m-t-10 m-b-10">
+                <div class="col-sm-6 col-lg-8">
+                    <form role="form">
+                        <div class="form-group contact-search m-b-30">
+
+
+                        </div>
+                        <!-- form-group -->
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-actions-bar table-striped table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th>İşlem</th>
+                            <th>İşlem Tarihi</th>
+                            <th>İşlem Açıklaması</th>
+                            <th>Durum</th>
+                            <th>Eylem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var qs = Model.FirmaGirdiCiktilar;
+
+                            if (Request.QueryString["Filter"] == "EksiHesaplar")
+                            {
+                                qs = qs.Where(q => q.GirdiTipi == 0).OrderByDescending(q => q.Id).ToList();
+                            }
+                            else if (Request.QueryString["Filter"] == "ArtiHesaplar")
+                            {
+                                qs = qs.Where(q => q.GirdiTipi == 1).OrderByDescending(q => q.Id).ToList();
+                            }
+                        }
+
+                        @foreach (var item in qs)
+                        {
+                            <tr>
+                                <td>
+                                    <i class="ion @{ if (item.GirdiTipi == 1){ <text>ion-arrow-up-a</text>}else { <text>ion-arrow-down-a</text> } } "></i>
+                                </td>
+                                <td>@item.TarihSaat</td>
+
+                                <td>@item.Aciklama</td>
+                                <td>
+                                    <span class="label @{if (item.GirdiDurum != 1){<text>label-warning</text>}else {<text>label-success</text>} }">
+                                        <script>document.write(girdiDurum(@item.GirdiDurum));</script>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="pull-left @{if (item.GirdiTipi == 0){<text>text-danger</text>}else {<text>text-success</text>} } tran-price">
+                                        @{if (item.GirdiTipi == 0)
+                                            {<text>-</text>}
+                                            else {<text>+</text>}} @string.Format("{0:C}", item.Tutar)
+                                    </td>
+                                </tr>
+                                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+</div>
+
+<!--odemeUyarisiModal-->
+<div id="odemeUyarisiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:55%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="custom-width-modalLabel">Uyarı Mesajı</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Ödeme uyarısı mesajınızı giriniz" id="uyariMesaji">Değerli Müşterimiz, lütfen en kısa sürede kredi yüklemesi yapınız.</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="gecerlilikTarihi">Geçerlilik tarihi</label>
+                    <input type="text" class="form-control datepicker" id="gecerlilikTarihi" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Vazgeç</button>
+                <button type="button" id="saveChanges" class="btn btn-primary waves-effect waves-light">Değişiklikleri Kaydet</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--odemeUyarisiModal-->
+<div id="vadeGunuUyarisiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:55%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="custom-width-modalLabel">Vade günü belirleyin</h4>
+            </div>
+            <div class="modal-body">
+                <!--modal content-->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="vadeTarihi">Vade tarihi</label>
+                        <input type="text" class="form-control datepicker" placeholder="mm.dd.yyyy" id="vadeTarihi">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gecerlilikTarihi">Bu tarih için öngörülen tutar</label>
+                        <input type="text" class="form-control" id="ongorulenMiktar" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Vazgeç</button>
+                <button type="button" id="saveChanges_VadeGunu" class="btn btn-primary waves-effect waves-light">Değişiklikleri Kaydet</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- bootstrap-datepicker -->
+<script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script>
+
+    @{
+        string v;
+        if( Model.VadeTarihi.SingleOrDefault() == null)
+        {
+            v = "0";
+        }
+        else
+        {
+            v = Model.VadeTarihi.FirstOrDefault().VadeTarihi.ToShortDateString();
+        }
+    }
+    $('#saveChanges_VadeGunu').on('click', function() {
+        if(@Model.VadeTarihi.Count()>0) {
+            swal({
+                title: "Dikkat?",
+                text: "Bu firmaya ait bir vade tarihi var '', bunu değiştirmek istediğinize emin misiniz?" ,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Evet, düzeltmeyi onaylıyorum",
+                closeOnConfirm: false
+            }, function(){
+                $.get('@Url.Content("~/")Admin/VadeGunuBelirle', {
+                    'FirmaId': @Model.Id, 'vadeTarihi' : $('#vadeTarihi').val(), 'Update' : true, 'OngorulenMiktar': $('#ongorulenMiktar').val()
+                }, function (d) {
+                    swal("Uyarı", d.ReturnMsg, d.Error);
+                    $('#vadeGunuUyarisiModal').modal('toggle');
+                });
+            });
+        }
+    });
+
+    /**
+    saveChanges Buttonu
+    **/
+    $('#saveChanges').on('click', function () {
+        if(controlRows()) {
+            if(@Model.FirmaUyarilari.Count(q=>q.UyariTipi== "odemeUyarisi") > 0) {
+                //Warning Message
+                swal({
+                    title: "Dikkat?",
+                    text: "Bu kullanıcıya yapılmış bir ödeme uyarısı zaten mevcut\nSon şekliyle düzenlediğiniz mesaj ve geçerlilik tarihi olarak güncelleme yapmak istiyor musunuz?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Evet, uyarıyı uzatmayı onaylıyorum",
+                    closeOnConfirm: false
+                }, function(){
+                    $.get('@Url.Content("~/")Admin/UyariEkle', {
+                        'musteriId': @Model.Id, 'Mesaj' : $('#uyariMesaji').val(), 'validDate' : $('#gecerlilikTarihi').val(), 'Update' : "true"
+                    }, function (d) {
+                        swal("Uyarı", d.ReturnMsg, d.Error);
+                        $('#odemeUyarisiModal').modal('toggle');
+                    });
+                });
+            }
+            else {
+                $.get('@Url.Content("~/")Admin/UyariEkle', {
+                    'musteriId': @Model.Id, 'Mesaj' : $('#uyariMesaji').val(), 'validDate' : $('#gecerlilikTarihi').val(), 'Update' : "false"
+                }, function (d) {
+                    swal("Uyarı", d.ReturnMsg, d.Error);
+                    $('#BildirimSayisi').html("Gösteriliyor");
+                    $('#odemeUyarisiModal').modal('toggle');
+                });
+            }
+        }
+    });
+
+    function deleteWarning(id) {
+        $.get('@Url.Content("~/")Admin/UyariEkle', {
+            'musteriId': @Model.Id, 'Mesaj' : $('#uyariMesaji').val(), 'validDate' : $('#gecerlilikTarihi').val(), 'Update' : "Delete"
+        }, function (d) {
+            swal("Uyarı", d.ReturnMsg, d.Error);
+            $('#BildirimSayisi').html("Gösterilmiyor");
+        });
+    }
+    function controlRows() {
+        if($('#gecerlilikTarihi').val() == "")
+        {
+            swal("Hata", "Lütfen tarih giriniz.","error");
+            return false;
+        }
+        else return true;
+    } // Tarih kontrol
+
+    // General Document Handlings
+    jQuery('.datepicker').datepicker({
+        toggleActive: true,
+        format: 'dd.mm.yyyy',
+    });
+
+
+    //self functions
+    function breeze(firmaid, action) {
+        if(action == "dondur") {
+            swal({
+                title: "Dikkat?",
+                text: "Firmanın tüm hesaplarını dondurmak, sipariş vermeyi, firma kullanıcılarının sisteme giriş yapmalarını engelleyecektir.\nBu işlemi yapmak istediğinize emin misiniz?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Evet, onaylıyorum",
+                closeOnConfirm: false
+            }, function(){
+                $.get('@Url.Content("~/")Admin/TumHesaplariDondur', {
+                    'Id' : firmaid,
+                    'aksiyon' : "dondur"
+                }, function (d) {
+                    if(d.ReturnValue==firmaid) {
+                        window.location.reload();
+                    }
+                    else {
+                        swal("Bilgi", d.ReturnMsg, d.Error);
+                    }
+                });
+            });
+        }
+        else {
+            $.get('@Url.Content("~/")Admin/TumHesaplariDondur', {
+                'Id' : firmaid,
+                'aksiyon' : "ac"
+            }, function (d) {
+                if(d.ReturnValue==firmaid) {
+                    swal("Bilgi", d.ReturnMsg, d.Error);
+                    window.location.reload();
+                }
+                else {
+                    swal("Bilgi", d.ReturnMsg, d.Error);
+                }
+            });
+        }
+    }
+    function CariDurumDegis(id) {
+        $.get('@Url.Content("~/")Admin/CariDurumDegis', {
+            'Id' : id
+        }, function (d) {
+            if(d.ReturnValue==1) {
+                //swal("Bilgi", "Cari Hesaba izin verildi", d.Error);
+                window.location.reload();
+            }
+            else {
+                //swal("Bilgi", "Cari Hesap izni kaldırıldı", d.Error);
+                window.location.reload();
+            }
+
+        });
+    }
+
+</script>
+
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<!-- Modal-Effect (Custom box)-->
+<script src="/assets/plugins/custombox/dist/custombox.min.js"></script>
+<script src="/assets/plugins/custombox/dist/legacy.min.js"></script>
+
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

@@ -1,0 +1,457 @@
+﻿@{
+    ViewBag.Title = "Gider Çiçekçilik";
+    Layout = "~/Views/_NewMaster.cshtml";
+}
+@model B2B.Dto.SepetDto
+@{
+    B2B.Dto.UserHolder UserInfo = new B2B.Dto.UserHolder();
+    if (Session["UserInfo"] == null)
+    {
+        UserInfo.UserId = 1;
+    }
+    else
+    {
+        UserInfo = (B2B.Dto.UserHolder)Session["UserInfo"];
+    }
+}
+<section class="main-container col1-layout">
+    <div class="main container">
+        <div class="col-main">
+            <div class="cart wow bounceInUp animated">
+                <div class="page-title">
+                    <h2>Siparişinizi İnceleyin</h2>
+                </div>
+                <div class="table-responsive">
+                    <form method="post" action="#updatePost/">
+                        <input type="hidden" value="Vwww7itR3zQFe86m" name="form_key">
+                        <fieldset>
+                            <table class="data-table cart-table" id="shopping-cart-table">
+                                <colgroup>
+                                    <col width="1">
+                                    <col>
+                                    <col width="1">
+                                    <col width="1">
+                                    <col width="1">
+                                    <col width="1">
+                                    <col width="1">
+                                </colgroup>
+                                <thead>
+                                    <tr class="first last">
+                                        <th rowspan="1">&nbsp;</th>
+                                        <th rowspan="1"><span class="nobr">Çiçek Adı</span></th>
+                                        <th rowspan="1">Ürün Kodu</th>
+                                        <th colspan="1" class="a-center"><span class="nobr">Adet Fiyatı</span></th>
+                                        <th class="a-center" rowspan="1">Adet</th>
+                                        <th colspan="1" class="a-center">Toplam</th>
+                                        <th class="a-center" rowspan="1">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr class="first last">
+                                        <td class="a-right last" colspan="50">
+                                            <button onclick="window.location.href = '/Home/';" class="button btn-continue" title="Geri Dön" type="button"><span>Çiçekleri İncelemeye Devam Et</span></button>
+                                            <!--<button class="button btn-update" title="Update Cart" value="update_qty" name="update_cart_action" type="submit"><span>Güncelle</span></button>
+                                            <button id="empty_cart_button" class="button btn-empty" title="Temizle" value="empty_cart" name="update_cart_action" type="submit"><span>Vazgeç</span></button></td><!---->
+                                    </tr>
+                                </tfoot>
+                                @{
+                                    int j = 0;
+                                }
+                                <!--sepet listeleme başlangıcı-->
+                                <tbody>
+                                    @foreach (var item in Model.Urunler)
+                                    {
+                                        <tr class="first odd" id="row-@item.UrunId">
+                                            <td class="image">
+                                                <a class="product-image" title="@item.UrunBaslik" href="#">
+                                                    <img width="75" alt="@item.UrunBaslik" src="/Upload/imajlar/@item.Fotograf">
+                                                </a>
+                                            </td>
+                                            <td><a href="/Products/ProductDetails/@item.UrunId">@item.UrunBaslik</a></td>
+                                            <td class="a-left"><a href="/Products/ProductDetails/@item.UrunId">@item.UrunKodu</a></td>
+                                            <td class="a-right"><span class="cart-price"><span class="price">@string.Format("{0:C}", item.UrunFiyat)</span> </span></td>
+                                            <td class="a-center movewishlist">
+                                                <input maxlength="12" class="input-text qty" title="Qty" size="4" value="@item.Adet" name="cart[@item.UrunId]">
+                                            </td>
+                                            <td class="a-right movewishlist TutarClass" data-Tutar="@item.UrunFiyat" data-Adet="@item.Adet"><span class="cart-price"><span class="price">@string.Format("{0:C}", item.Adet * item.UrunFiyat)</span> </span></td>
+                                            <td class="a-center last"><a class="button remove-item" title="Sil" href="#" onclick="SepettenSil(@item.UrunId);"><span><span>Sil</span></span></a></td>
+                                        </tr>
+                                        j++;
+                                    }
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </form>
+                </div>
+                <!-- BEGIN CART  -->
+                <div class="cart-collaterals row">
+                    <div class="col-sm-4">
+                        <div class="shipping">
+                            <h3>Gönderim Ücretini Hesaplayın</h3>
+                            <div class="shipping-form">
+                                <form id="shipping-zip-form" method="post" action="#estimatePost/">
+                                    <p>Gönderim yapacağınız semt bilgisi giriniz</p>
+                                    <ul class="form-list">
+                                        <li>
+                                            <label class="required" for="sehir"><em>*</em>Şehir</label>
+                                            <div class="input-box">
+                                                <select title="Semt" class="validate-select" id="Semt" name="Semt" required="required">
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="Akdeniz">Akdeniz</option>
+                                                    <option value="Toroslar">Toroslar</option>
+                                                    <option value="Yenişehir">Yenişehir</option>
+                                                    <option value="Mezitli">Mezitli</option>
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="acikadres">Gönderen Adı Soyadı</label>
+                                            <div class="input-box">
+                                                <input name="SiparisVeren" id="SiparisVeren" class="input-text" style="width:100%" required>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="acikadres">Gönderene ait bir iletişim numarası</label>
+                                            <div class="input-box">
+                                                <input name="iletisimNo" id="iletisimNo" class="input-text" style="width:100%" required>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="acikadres">Kime Teslim Edelim? (Alıcı Ad Soyad)</label>
+                                            <div class="input-box">
+                                                <textarea name="aliciadsoyad" id="aliciadsoyad" class="input-text" style="width:100%" required="required"></textarea>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="acikadres">Açık Adresi Yazın</label>
+                                            <div class="input-box">
+                                                <textarea name="acikadres" id="acikadres" class="input-text" style="width:100%" required="required"></textarea>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="adrestarif">Adresi tarif ediniz</label>
+                                            <div class="input-box">
+                                                <input type="text" name="adrestarif" id="adrestarif" class="input-text" required="required">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="adrestarif">Çiçeğinize not ekleyin</label>
+                                            <div class="input-box">
+                                                <textarea name="Notlar" id="Notlar" class="input-text" style="width:100%"></textarea>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <!--buttons-set11-->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="col-sm-4">
+                        <div class="discount">
+                            <h3>Kredi Kartı ödeme ekranı</h3>
+                            <form method="post" action="#couponPost/" id="discount-coupon-form">
+                                <section>
+                                    <!-- START FORM -->
+
+                                    <div class="credit-card-input no-js" id="skeuocard">
+                                        <p class="no-support-warning">
+                                            Javascript ekranı görüntülenemedi.
+                                        </p>
+                                        <label for="cc_type">Card Type</label>
+                                        <select name="cc_type">
+                                            <option value="">...</option>
+                                            <option value="visa">Visa</option>
+                                            <option value="discover">Discover</option>
+                                            <option value="mastercard">MasterCard</option>
+                                            <option value="maestro">Maestro</option>
+                                            <option value="jcb">JCB</option>
+                                            <option value="unionpay">China UnionPay</option>
+                                            <option value="amex">American Express</option>
+                                            <option value="dinersclubintl">Diners Club</option>
+                                        </select>
+                                        <label for="cc_number">Card Number</label>
+                                        <input type="text" name="cc_number" id="cc_number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" size="19">
+                                        <label for="cc_exp_month">Expiration Month</label>
+                                        <input type="text" name="cc_exp_month" id="cc_exp_month" placeholder="00">
+                                        <label for="cc_exp_year">Expiration Year</label>
+                                        <input type="text" name="cc_exp_year" id="cc_exp_year" placeholder="00">
+                                        <label for="cc_name">Cardholder's Name</label>
+                                        <input type="text" name="cc_name" id="cc_name" placeholder="John Doe">
+                                        <label for="cc_cvc">Card Validation Code</label>
+                                        <input type="text" name="cc_cvc" id="cc_cvc" placeholder="123" maxlength="3" size="3">
+                                    </div>
+
+                                    <!-- END FORM -->
+                                </section>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="totals">
+                            <h3>Ödeyeceğiniz Tutar</h3>
+                            <div class="inner">
+                                <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                                    <colgroup>
+                                        <col>
+                                        <col width="1">
+                                    </colgroup>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="1" class="a-left" style="">Ara Toplam </td>
+                                            <td class="a-right" style=""><span class="price" id="aratoplam">Yükleniyor..</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1" class="a-left" style="">Gönderim Ücreti </td>
+                                            <td class="a-right" style=""><span class="price">0,00₺</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="1" class="a-left" style="">K.D.V.(18%) </td>
+                                            <td class="a-right" style=""><span class="price" id="kdv">Yükleniyor</span></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="1" class="a-left" style=""><strong>Genel Toplam</strong></td>
+                                            <td class="a-right" style=""><strong><span class="price" id="genelTutar">Yükleniyor..</span></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <ul class="checkout">
+                                    <li>
+                                        <button onclick="odemeYap();" class="button btn-proceed-checkout" title="Ödemeyi Onayla" type="button"><span>Ödemeyi onayla</span></button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--inner-->
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--cart-collaterals-->
+
+            </div>
+            <div class="crosssel bounceInUp animated">
+
+
+                @*<div class="also-like">
+                        <div class="category-products">
+                            <div class="new_title">
+                                <h2>Siparişinize Uygun Ürünlere Gözatın</h2>
+                            </div>
+                            <ul class="products-grid">
+                                <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                                    <div class="item-inner">
+                                        <div class="item-img">
+                                            <div class="item-img-info">
+                                                <a class="product-image" title="Retis lapen casen" href="product_detail.html">
+                                                    <img alt="Retis lapen casen" src="/products-images/product10.jpg">
+                                                </a>
+                                                <div class="box-hover">
+                                                    <ul class="add-to-links">
+                                                        <li><a class="link-quickview" href="quick_view.html">Quick View</a>
+                                                        </li>
+                                                        <li><a class="link-wishlist" href="wishlist.html">Wishlist</a>
+                                                        </li>
+                                                        <li><a class="link-compare" href="compare.html">Compare</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item-info">
+                                            <div class="info-inner">
+                                                <div class="item-title"><a title="Retis lapen casen" href="product_detail.html">Retis lapen casen </a></div>
+                                                <div class="item-content">
+                                                    <div class="rating">
+                                                        <div class="ratings">
+                                                            <div class="rating-box">
+                                                                <div style="width: 80%" class="rating"></div>
+                                                            </div>
+                                                            <p class="rating-links"><a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-price">
+                                                        <div class="price-box">
+                                                            <span class="regular-price"><span class="price">$155.00</span> </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="action">
+                                                        <button class="button btn-cart" type="button" title="" data-original-title="Add to Cart">
+                                                            <span>Add to Cart</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                                    <div class="item-inner">
+                                        <div class="item-img">
+                                            <div class="item-img-info">
+                                                <a class="product-image" title="Retis lapen casen" href="product_detail.html">
+                                                    <img alt="Retis lapen casen" src="/products-images/product1.jpg">
+                                                </a>
+                                                <div class="box-hover">
+                                                    <ul class="add-to-links">
+                                                        <li><a class="link-quickview" href="quick_view.html">Quick View</a>
+                                                        </li>
+                                                        <li><a class="link-wishlist" href="wishlist.html">Wishlist</a>
+                                                        </li>
+                                                        <li><a class="link-compare" href="compare.html">Compare</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item-info">
+                                            <div class="info-inner">
+                                                <div class="item-title"><a title="Retis lapen casen" href="product_detail.html">Retis lapen casen </a></div>
+                                                <div class="item-content">
+                                                    <div class="rating">
+                                                        <div class="ratings">
+                                                            <div class="rating-box">
+                                                                <div style="width: 80%" class="rating"></div>
+                                                            </div>
+                                                            <p class="rating-links"><a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-price">
+                                                        <div class="price-box">
+                                                            <span class="regular-price"><span class="price">$225.00</span> </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="action">
+                                                        <button class="button btn-cart" type="button" title="" data-original-title="Add to Cart">
+                                                            <span>Add to Cart</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                                    <div class="item-inner">
+                                        <div class="item-img">
+                                            <div class="item-img-info">
+                                                <a class="product-image" title="Retis lapen casen" href="product_detail.html">
+                                                    <img alt="Retis lapen casen" src="/products-images/product2.jpg">
+                                                </a>
+                                                <div class="box-hover">
+                                                    <ul class="add-to-links">
+                                                        <li><a class="link-quickview" href="quick_view.html">Quick View</a>
+                                                        </li>
+                                                        <li><a class="link-wishlist" href="wishlist.html">Wishlist</a>
+                                                        </li>
+                                                        <li><a class="link-compare" href="compare.html">Compare</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item-info">
+                                            <div class="info-inner">
+                                                <div class="item-title"><a title="Retis lapen casen" href="product_detail.html">Retis lapen casen </a></div>
+                                                <div class="item-content">
+                                                    <div class="rating">
+                                                        <div class="ratings">
+                                                            <div class="rating-box">
+                                                                <div style="width: 80%" class="rating"></div>
+                                                            </div>
+                                                            <p class="rating-links"><a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-price">
+                                                        <div class="price-box">
+                                                            <span class="regular-price"><span class="price">$99.00</span> </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="action">
+                                                        <button class="button btn-cart" type="button" title="" data-original-title="Add to Cart">
+                                                            <span>Add to Cart</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                                    <div class="item-inner">
+                                        <div class="item-img">
+                                            <div class="item-img-info">
+                                                <a class="product-image" title="Retis lapen casen" href="product_detail.html">
+                                                    <img alt="Retis lapen casen" src="/products-images/product3.jpg">
+                                                </a>
+                                                <div class="new-label new-top-left">new</div>
+                                                <div class="box-hover">
+                                                    <ul class="add-to-links">
+                                                        <li><a class="link-quickview" href="quick_view.html">Quick View</a>
+                                                        </li>
+                                                        <li><a class="link-wishlist" href="wishlist.html">Wishlist</a>
+                                                        </li>
+                                                        <li><a class="link-compare" href="compare.html">Compare</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item-info">
+                                            <div class="info-inner">
+                                                <div class="item-title"><a title="Retis lapen casen" href="product_detail.html">Retis lapen casen </a></div>
+                                                <div class="item-content">
+                                                    <div class="rating">
+                                                        <div class="ratings">
+                                                            <div class="rating-box">
+                                                                <div style="width: 80%" class="rating"></div>
+                                                            </div>
+                                                            <p class="rating-links"><a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-price">
+                                                        <div class="price-box">
+                                                            <p class="special-price"><span class="price-label">Special Price</span> <span class="price">$156.00 </span></p>
+                                                            <p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$167.00 </span></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="action">
+                                                        <button class="button btn-cart" type="button" title="" data-original-title="Add to Cart">
+                                                            <span>Add to Cart</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" tabindex="-1" role="dialog" id="threedpage">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">3D Ödeme Sayfası</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="ReturnMsg">0</p>
+      </div>
+    </div>
+  </div>
+</div>
+@section AddToBottom{
+    <!-- page scripts -->
+    <script src="~/assets/js/SepetIndex.js"></script>
+}

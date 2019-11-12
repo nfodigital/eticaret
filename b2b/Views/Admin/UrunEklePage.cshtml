@@ -1,0 +1,290 @@
+﻿@{
+    ViewBag.Title = "UrunEklePage";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Ürün Ekle</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/Admin/Index">Ana sayfa</a>
+            </li>
+            <li class="active">
+                Ürün Ekle
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <form id="urunEkle">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card-box">
+                        <h5 class="text-muted text-uppercase m-t-0 m-b-20"><b>GENEL BİLGİLER</b></h5>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_NAME">Ürün Başlık (Ürün Adı)<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control controlForm" placeholder="Örn : Apple iMac" id="PRODUCT_NAME" data-name="Ürün Başlığı" maxlength="250">
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_CATEGORY">Ürün Kategorisi <span class="text-danger">*</span></label>
+                            <select class="multipleSelect form-control controlForm" multiple name="language" id="PRODUCT_CATEGORY" style="font-size:13px"></select>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_CATEGORY">MARKA <span class="text-danger">*</span></label>
+                            <select class="form-control controlFormSelects" id="PRODUCT_MARKAID" data-name="Marka">
+                                <option value="*">Marka Seçiniz</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_MODELID">MODEL <span class="text-danger">*</span></label>
+                            <select class="form-control controlFormSelects" id="PRODUCT_MODELID" data-name="Model">
+                                <option value="*">Model Seçin</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label>Ürün Kodu <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Örn: MD2564" style="max-width:150px" id="UrunKodu" class="form-control controlForm" required data-name="Ürün Kodu">
+                            <span class="text-danger" id="warningText"></span>
+                        </div>
+
+
+                        <div class="form-group m-b-20">
+                            <label>Stok <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Örn: 100" style="max-width:100px" data-v-min="0" class="form-control controlForm" data-name="Ürün Stok Durumu" id="UrunStok">
+                            <div class="checkbox checkbox-purple checkbox-circle">
+                                <input name="StoktanDus" id="StoktanDus" type="checkbox">
+                                <label for="StoktanDus">
+                                    Ürünü stoktan düş
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label class="m-b-15">Kampanyalı Ürün <span class="text-danger">*</span></label>
+                            <br />
+                            <div class="checkbox checkbox-purple checkbox-circle">
+                                <input id="PRODUCTS_FAV" type="checkbox">
+                                <label for="PRODUCTS_FAV">
+                                    Bu ürünü kampanyalı ürünler arasında göster
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_ACTIVE">Ürün hemen yayınlansın mı? <span class="text-danger">*</span></label>
+                            <div class="checkbox checkbox-purple checkbox-circle">
+                                <input id="PRODUCT_ACTIVE" type="checkbox" checked>
+                                <label for="PRODUCT_ACTIVE">
+                                    Ürünü Hemen Yayınla (Satışa hazır hale getir)
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card-box">
+                        <h5 class="text-muted text-uppercase m-t-0 m-b-20"><b>FİYAT BİLGİLERİ VE ÜRÜN AÇIKLAMASI</b></h5>
+
+                        <div class="col-md-4">
+                            <div class="form-group m-b-20">
+                                <label>Fiyat <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Örn: 25" style="max-width:150px" data-v-min="0" class="form-control controlForm" data-name="Ürün Fiyatı" id="UrunFiyat" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="form-group m-b-20">
+                                <label for="PRODUCT_TAXCLASS">Ürün KDV Oranı</label>
+                                <select class="form-control controlFormSelects" id="PRODUCT_TAXCLASS" data-name="KDV Oranı">
+                                    <option value="1" disabled>%1</option>
+                                    <option value="8" disabled>%8</option>
+                                    <option value="18" selected>%18</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-b-20">
+                            <label for="PRODUCT_DESCRIPTION">Ürün Açıklaması <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="5" id="PRODUCT_DESCRIPTION"
+                                      placeholder="Lütfen ürünle ilgili açıklama giriniz"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="card-box">
+                        <h5 class="text-muted text-uppercase m-t-0 m-b-30"><b>Ürün Fotoğrafları</b></h5>
+                        <div class="form-group">
+                            <input type="file" class="form-control" id="yeniFoto" name="yeniFoto" /><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="text-center p-20">
+                        <button type="button" class="btn w-sm btn-white waves-effect" id="btnCancel">Cancel</button>
+                        <button type="button" class="btn w-sm btn-default waves-effect waves-light" id="saveChanges">
+                            Ürünü Kaydet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Bootstrap inputmask -->
+<script src="/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+<!-- Auto numeric -->
+<script src="/assets/plugins/autoNumeric/autoNumeric.js" type="text/javascript"></script>
+<!--Summernote js-->
+<script src="/assets/plugins/summernote/summernote.min.js"></script>
+<script>
+    $('.multipleSelect').fastselect();
+    $('#UrunKodu').focusout(function () {
+        if ($(this).val() == "") {
+            $('#warningText').removeClass("text-success");
+            $('#warningText').addClass("text-danger");
+            $('#warningText').html("<span class='fa fa-exclamation'></span> Ürün kodu boş bırakılamaz.");
+        }
+        else {
+            $.get('@Url.Content("~/")Admin/UrunKoduKontrol', { 'UrunKodu': $(this).val() }, function (d) {
+                if (d == 'False') {
+                    $('#warningText').removeClass("text-success");
+                    $('#warningText').addClass("text-danger");
+                    $('#warningText').html("<span class='fa fa-exclamation'></span> Bu kod kullanılıyor.");
+                    $('#UrunKodu').focus();
+                }
+                else {
+                    $('#warningText').removeClass("text-danger")
+                    $('#warningText').addClass("text-success");
+                    $('#warningText').html("<span class='fa fa-check'></span> KOD kullanılabilir.");
+                }
+            });
+        }
+    });
+
+
+    function getFotos() {
+        var fotolar = new Array();
+        $('.qq-upload-file').each(function (i, key) {
+            fotolar.push(
+                {
+                    FotoId: i, FileName: $(this).attr('title')
+                });
+        });
+        fotolar = JSON.stringify(fotolar);
+        return fotolar;
+    }
+
+    $('#saveChanges').click(function () {
+        if (controlForms() != false) {
+            var fotograflar = getFotos();
+            var formData = new FormData();
+            formData.append('yeniFoto', $('#yeniFoto')[0].files[0]);
+            formData.append('UrunAdi', $('#PRODUCT_NAME').val());
+            formData.append('AlternatifKategoriler', JSON.stringify($('#PRODUCT_CATEGORY').val()));
+            formData.append('UrunVergiOrani', $('#PRODUCT_TAXCLASS').val());
+            formData.append('UrunAgirlik', 0);
+            formData.append('UrunAgirlikSinifi', 1);
+            formData.append('UrunFiyat', $('#UrunFiyat').val());
+            formData.append('UrunKodu', $('#UrunKodu').val());
+            formData.append('UrunAciklama', $('#PRODUCT_DESCRIPTION').val());
+            formData.append('Stok', $('#UrunStok').val());
+            formData.append('UrunAciklama', $('#PRODUCT_DESCRIPTION').val());
+            formData.append('GonderimTipi', "KARGO");
+            formData.append('IndirimGrubu', 0);
+            formData.append('MinimumSiparisAdeti', 0);
+            formData.append('MarkaId', $('#PRODUCT_MARKAID').val());
+            formData.append('ModelId', $('#PRODUCT_MODELID').val());
+            formData.append('UrunDurum', $("#PRODUCT_ACTIVE").prop('checked') == true ? "1" : "0");
+            formData.append('OneCikanUrun', $("#PRODUCTS_FAV").prop('checked') == true ? "1" : "0");
+            formData.append('StoktanDus', $("#StoktanDus").prop('checked') == true ? "1" : "0");
+
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: '@Url.Content("~/")Admin/UrunKaydetveyaYenile',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (d) {
+                    swal("Bilgi", d.ReturnMsg, d.Error);
+                }
+            });
+        }
+        else {
+            console.log("form false");
+        }
+    });
+
+    $.get('@Url.Content("~/")Siparis/KategoriVer', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#PRODUCT_CATEGORY').append('<option value=' + d[i].Id + '>' + d[i].KategoriBaslik + '</option>')
+        });
+    });
+
+    $.get('@Url.Content("~/")Siparis/MarkaVer', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#PRODUCT_MARKAID').append("<option value=" + d[i].Id + ">" + d[i].Marka + "</option>")
+        });
+    });
+
+    $('#PRODUCT_MARKAID').change(function () {
+        $.get('@Url.Content("~/")Siparis/ModelVer', {
+            'MarkaId': $(this).val()
+        }, function (d) {
+            $('#PRODUCT_MODELID').empty();
+            $('#PRODUCT_MODELID').append("<option value='-1'>Tümü için geçerli</option>")
+            $.each(d, function (i, val) {
+                $('#PRODUCT_MODELID').append("<option value=" + d[i].Id + ">" + d[i].Marka + "</option>")
+            });
+        });
+
+    });
+
+    //automatic
+    $('.autonumber').autoNumeric('init');
+
+    function controlForms() {
+        var donenDeger = true;
+        $('.controlForm').each(function (i, key) {
+            if ($(this).val() == "") {
+                alert($(this).data('name') + " boş bırakılamaz.");
+                donenDeger = false;
+            }
+        });
+        $('.controlFormSelects').each(function (i, key) {
+            if ($(this).find('option:selected').val() == "*") {
+                alert($(this).data('name') + " boş bırakılamaz.");
+                donenDeger = false;
+            }
+        });
+        return donenDeger;
+    }
+
+    $('#PRODUCT_DESCRIPTION').summernote({
+        height: 250,                
+        minHeight: null,            
+        maxHeight: null,            
+        focus: false                
+    });
+    
+</script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>

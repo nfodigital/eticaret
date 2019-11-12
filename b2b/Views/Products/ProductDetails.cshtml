@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "Çiçek Detayları";
+    Layout = "~/Views/_NewMaster.cshtml";
+}
+@model B2B.Models.Entity.PRODUCTS
+
+<!-- Main Container -->
+<section class="main-container col1-layout">
+    <div class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-main">
+                    <div class="product-view">
+                        <div class="product-essential">
+                            <form action="#" method="post" id="product_addtocart_form">
+                                <input name="form_key" value="6UbXroakyQlbfQzK" type="hidden">
+                                <div class="product-img-box col-lg-4 col-sm-5 col-xs-12">
+                                    <div class="new-label new-top-left">İndirimde </div>
+                                    <div class="product-image">
+                                        <div class="product-full">
+                                            <img id="product-zoom" src="/Upload/imajlar/@Model.UrunFotografi" data-zoom-image="/Upload/imajlar/@Model.UrunFotografi" alt="product-image"/>
+                                        </div>
+                                   
+                                    </div>
+                                    <!-- end: more-images -->
+                                </div>
+                                <div class="product-shop col-lg-8 col-sm-7 col-xs-12">
+                                    <div class="product-next-prev"><a class="product-next" href="#"><span></span></a><a class="product-prev" href="#"><span></span></a></div>
+                                    <div class="product-name">
+                                        <h1>@Model.UrunAdi</h1>
+                                    </div>
+                                    <div class="ratings">
+                                        <div class="rating-box">
+                                            <div style="width: 60%" class="rating"></div>
+                                        </div>
+                                        <p class="rating-links"><a href="#">Ürün Kodu : @Model.UrunKodu</a> <span class="separator">|</span> <a href="#">Sık gönderdiğim çiçeklere ekle</a> </p>
+                                    </div>
+                                    <div class="price-block">
+                                        <div class="price-box">
+                                            <p class="special-price"><span class="price-label">Fiyat</span> <span id="product-price-48" class="price">@string.Format("{0:C}", Model.UrunFiyat) </span></p>
+                                            <p class="availability in-stock pull-right"><span>@{ if (Model.Stok > 0)
+                                                                                                                {<text>Mevcut</text> } }</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="short-description">
+                                        <h2>Bu çiçeğin içinde neler var?</h2>
+                                        <p>@Html.Raw(@Model.UrunAciklama)</p>
+                                    </div>
+                                    <div class="add-to-box">
+                                        <div class="add-to-cart">
+                                        <button onclick="SepeteAt(@Model.Id);" class="button btn-cart" title="Sipariş Ver" type="button">Siteden Sipariş Ver</button>
+                                        </div>
+                                        <div class="email-addto-box">
+                                            <button onclick="location.href='https://api.whatsapp.com/send?phone=905324142333&text=https://cicekgider.com/Products/ProductDetails/@Model.Id Merhabalar, şu çiçeği sipariş etmek istiyorum'" class="button btn-cart" title="Whatsapp ile Sipariş Ver" type="button">Whatsapp ile Sipariş Ver</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Main Container End -->
+<div class="container">
+
+    <!-- Related Slider -->
+    @*<div class="related-pro">
+
+        <div class="slider-items-products">
+            <div class="related-block">
+                <div id="related-products-slider" class="product-flexslider hidden-buttons">
+                    <div class="home-block-inner">
+                        <div class="block-title">
+                            <h2>Şunlara Gözatın</h2>
+                        </div>
+                        <div class="pretext">
+                            <a title="Retis lapen casen" href="#">
+                                <img alt="Retis lapen casen" src="/assets/images/offer-banner2.jpg">
+                            </a>
+                            <div class="offer-text">10% a varan indirimler!</div>
+                        </div>
+
+                    </div>
+                    <div class="slider-items slider-width-col4 products-grid block-content">
+                        <!--başla-->
+                        @foreach (var item in ViewBag.SunlaraGozat)
+                        {
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="item-img">
+                                    <div class="item-img-info">
+                                        <a class="product-image" title="@item.BenzeyenUrunBasligi" href="/Products/ProductDetails/@item.BenzeyenUrunId">
+                                            <img alt="Retis lapen casen" src="/Upload/imajlar/@item.BenzeyenUrunFotografi">
+                                        </a>
+                                        <div class="box-hover">
+                                            <ul class="add-to-links">
+                                                <li><a class="link-quickview" href="/Products/ProductDetails/@item.BenzeyenUrunId">Quick View</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-info">
+                                    <div class="info-inner">
+                                        <div class="item-title"><a title="@item.BenzeyenUrunBasligi" href="/Products/ProductDetails/@item.BenzeyenUrunId">@item.BenzeyenUrunBasligi </a></div>
+                                        <div class="rating">
+                                            <div class="ratings">
+                                                <div class="rating-box">
+                                                    <div style="width: 80%" class="rating"></div>
+                                                </div>
+                                                <p class="rating-links"><a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                                            </div>
+                                        </div>
+                                        <div class="item-content">
+                                            <div class="item-price">
+                                                <div class="price-box">
+                                                    <span class="regular-price"><span class="price">@string.Format("{0:C}", item.BenzeyenUrunFiyati)</span> </span>
+                                                </div>
+                                            </div>
+                                            <div class="action">
+                                                <button onclick="SepeteAt(@item.BenzeyenUrunId)" class="button btn-cart" type="button" title="" data-original-title="Sipariş Ver">
+                                                    <span>Sipariş Ver</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        <!--bitir-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>*@
+    <!-- End related products Slider -->
+
+</div>

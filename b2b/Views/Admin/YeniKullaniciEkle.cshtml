@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Uyarı Yazıları";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="YetkiliKisi" class="control-label">Kullanıcı Adı Soyadı</label>
+            <input type="text" class="form-control formCtrl" id="YetkiliKisi" name="YetkiliKisi" placeholder="Ad Soyad Giriniz" required="required" data-errorinfo="Yetkili Kişi">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="FirmaAdi" class="control-label">Firma</label>
+            <select class="form-control" id="Firmalar">
+                <option value="">Firma Seçin</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Username" class="control-label">Kullanıcı Adı</label>
+            <input type="text" class="form-control formCtrl" id="Username" name="Username" placeholder="Kullanıcı Adı" autocomplete="off" data-errorinfo="Kullanıcı Adı">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Password" class="control-label">Şifre</label>
+            <input type="password" class="form-control formCtrl" id="Password" name="Password" placeholder="Şifre" autocomplete="off" data-errorinfo="Şifre">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="Password" class="control-label">Eposta</label>
+            <input type="email" class="form-control formCtrl" id="Eposta" name="Eposta" placeholder="ornek@ornek.com" autocomplete="off" data-errorinfo="Eposta">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group no-margin">
+            <div class="checkbox checkbox-purple checkbox-circle">
+                <input name="UserActive" id="UserActive" type="checkbox">
+                <label for="UserActive">
+                    Bu Kullanıcıyı aktif et
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.get('@Url.Content("~/")Admin/FirmalariListele', {
+    }, function (d) {
+        $.each(d, function (i, key) {
+            $('#Firmalar').append('<option value=' + d[i].Id + '>' + d[i].FirmaAdi + '</option>');
+        });
+    });
+    $('#modalForm').attr('action', "/Admin/KullaniciEkle")
+
+</script>

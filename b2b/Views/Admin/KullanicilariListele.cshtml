@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "HesaplariListele";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+@model List<B2B.Models.Entity.USERS>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group pull-right m-t-15">
+            <button type="button" class="btn btn-default dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Seçenekler <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/Admin/HesaplariListele?OrderBy=BakiyeArti">Bakiyesi Artıdan - Bakiye Eksiye</a></li>
+                <li><a href="/Admin/HesaplariListele?OrderBy=BakiyeEksi">Bakiyesi Eksiden - Bakiye Artıya</a></li>
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+<!-- Page-Title -->
+<h4 class="page-title">Anasayfa</h4>
+<ol class="breadcrumb">
+    <li>Yönetim
+    </li>
+    <li>Hesaplar
+    </li>
+    <li class="active">Kullanıcıları Görüntüle
+    </li>
+</ol>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-sm-8">
+                    <form role="form">
+                        <div class="form-group contact-search m-b-30">
+                            <input type="text" id="search" class="form-control" placeholder="Arama yap...">
+                            <button type="submit" class="btn btn-white"><i class="fa fa-search"></i></button>
+                        </div>
+                        <!-- form-group -->
+                    </form>
+                </div>
+                <div class="col-sm-4">
+                    <!-- Custom width modal -->
+                    <button class="btn btn-primary waves-effect waves-light editUser" href="/Admin/YeniKullaniciEkle"><i class="md md-add"></i>Yeni Kullanıcı Ekle</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-actions-bar table-striped table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th>Yetkili</th>
+                            <th>Firma</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>Eylem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="#">@item.Adi</a>
+                                </td>
+                                <td>@Html.Action("FirmaAdiVer", "CommonFunctions", new { FirmaId = item.FirmaId })</td>
+                                <td>@item.KayitTarihi</td>
+                                <td>
+                                    <a href="/Admin/KullaniciGoster/@item.Id"  class="table-action-btn editUser"><i class="md md-mode-edit"></i></a>
+                                    <a href="javascript:KullaniciSil(@item.Id);" class="table-action-btn"><i class="md md-delete"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+
+</div>
+<div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Yeni Kullanıcı Ekleyin</h4>
+            </div>
+            <form id="modalForm" action="#" method="post">
+                <div class="modal-body">
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" id="closeModal" class="btn btn-danger waves-effect" data-dismiss="modal">İptal</button>
+                <button type="button" id="saveChanges" class="btn btn-success waves-effect waves-light">Değişiklikleri Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
+<!-- Modal-Effect -->
+<script src="/assets/plugins/custombox/dist/custombox.min.js"></script>
+<script src="/assets/plugins/custombox/dist/legacy.min.js"></script>
+
+<!-- Bootstrap-select  -->
+<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js" type="text/javascript"></script>
+<!-- Bootstrap inputmask -->
+<script src="/assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>
+<script>
+    function KullaniciSil(id) {
+        swal({
+            title: "Dikkat!",
+            text: "Bu kullanıcıyı silerseniz bu işlemi geri alamazsınız emin misiniz?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Evet, Eminim!",
+            cancelButtonText: "Vazgeç!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                $.post('@Url.Content("~/")Admin/KullaniciSil', {
+                    'UserId': id
+                }, function (d) {
+                    if (d.Error == "success") {
+                        swal("Başarılı!", d.ReturnMsg, d.Error);
+                        setTimeout(function () { location.reload(); }, 2000);
+                    }
+                    else {
+                        swal("Hata Oluştu!", d.ReturnMsg, d.Error);
+                    }
+                });
+            }
+            else {
+                swal("İptal", "İsteğiniz üzere işlem iptal edildi", "error");
+            }
+        });
+    }
+    $('.editUser').on('click', function (e) {
+        e.preventDefault();
+        $('#con-close-modal').modal('show').find('.modal-body').load($(this).attr('href'));
+    });
+
+    $('.modal').on('hidden.bs.modal', function (e) {
+        $(this).removeData();
+    });
+    
+    $('#saveChanges').on('click', function (e) {
+        var aktif = 0;
+        var userid = $('#UserId').val();
+        if ($('#UserActive').prop('checked') == true) {
+            aktif = 1;
+        }
+        else {
+            aktif = 0;
+        }
+        $.post($('#modalForm').attr('action'), {
+            'Id' : userid,
+            'Adi': $('#YetkiliKisi').val(),
+            'Aktif': aktif,
+            'FirmaId': $('#Firmalar').val(),
+            'USERNAME': $('#Username').val(),
+            'PASSWORD': $('#Password').val(),
+            'Eposta': $('#Eposta').val()
+        }, function (d) {
+            swal("Dikkat", d.ReturnMsg, d.Error);
+            $('.modal').modal('toggle');
+        });
+    });
+
+    function formCtrl() {
+        var r = true;
+        $('.formCtrl').each(function (i, key) {
+            if ($(this).val() == "") {
+                r = false;
+                alert($(this).data('errorinfo') + " boş bırakılamaz.")
+            }
+        });
+        return r;
+    }
+</script>
+
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<!-- Modal-Effect (Custom box)-->
+<script src="/assets/plugins/custombox/dist/custombox.min.js"></script>
+<script src="/assets/plugins/custombox/dist/legacy.min.js"></script>
+
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

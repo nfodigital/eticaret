@@ -1,0 +1,20 @@
+﻿@model B2B.Models.Entity.BRANDS
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="YetkiliKisi" class="control-label">Marka</label>
+            <input type="text" class="form-control formCtrl" id="Marka" name="Marka" placeholder="Marka Giriniz" required="required" data-errorinfo="Marka" value="@Model.Marka">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="FirmaAdi" class="control-label">Marka Şuna Ait</label>
+            <input type="text" class="form-control" id="MarkaAltId" name="MarkaAltId" value="@Model.MarkaAltId">
+        </div>
+    </div>
+</div>
+<input type="hidden" id="Id" value="@Model.Id" />
+

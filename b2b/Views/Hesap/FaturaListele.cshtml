@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "FaturaListele";
+    Layout = "~/Views/_Master.cshtml";
+}
+@model List<B2B.Models.Entity.ORDERS>
+
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+
+        <h4 class="page-title">Faturalarım</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/Hesap/FaturaGoster">Ana Sayfa</a>
+            </li>
+            <li>
+                Muhasebe
+            </li>
+            <li class="active">Faturalarım</li>
+        </ol>
+
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card-box">
+            <div class="row m-t-10 m-b-10">
+                <div class="col-sm-12">
+                    <form role="form" action="/Hesap/FaturaListele">
+                        <div class="input-daterange input-group" id="date-range">
+                            <input type="text" class="form-control" name="start" />
+                            <span class="input-group-addon bg-custom b-0 text-white">ile</span>
+                            <input type="text" class="form-control" name="end" />
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success pull-right form-control waves-effect waves-light"><i class="fa fa-search"></i> Tarihler arası aramayı başlat</button>
+                        </div>
+                        <!-- form-group -->
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-actions-bar dataTable table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sipariş Kodu</th>
+                            <th>İşlem Tarihi</th>
+                            <th>İşlem Açıklaması</th>
+                            <th>Durum</th>
+                            <th>Tutar</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.SiparisNo
+                                </td>
+                                <td>@item.SiparisTarihi</td>
+                                <td><a href="/Siparis/SiparisIncele/@item.Id">@item.SiparisNo</a></td>
+                                <td>
+                                    @{
+                                        string FaturaDurumu = item.SiparisDurumu == 1 ? "Fatura Hazır"
+                                            : "İşlem Bekliyor";
+                                    }
+                                    <span class="label @{if (item.SiparisDurumu != 1)
+                                                     {<text>label-warning</text>}
+                                                     else
+                                                     {<text>label-success</text>} } ">@FaturaDurumu</span>
+                                                </td>
+                                                <td>@string.Format("{0:C}", item.SiparisToplami)</td>
+                                                <td>
+                                                    @{if (item.SiparisDurumu == 1)
+                                                        {<a href="/Hesap/FaturaGoster/@item.Id" class="table-action-btn"><i class="md md-find-in-page"></i></a>} }
+                                                </td>
+                                            </tr>
+                                                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+</div>
+@{
+    if (Model.Count == 0)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-box">
+                    <p>
+                        Hiç kayıt yok.
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+}
+<!-- moment -->
+<script src="/assets/plugins/moment/moment.js"></script>
+<!-- moment -->
+<script src="/assets/plugins/moment/moment-with-locales.js"></script>
+
+<!-- bootstrap-datepicker -->
+<script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script>
+    jQuery(document).ready(function () {
+
+
+        jQuery('#date-range').datepicker({
+            toggleActive: true,
+            format: 'dd.mm.yyyy',
+            locale: moment.locale('tr')
+        });
+
+
+    });
+</script>
+
+<!-- Datatable js -->
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/assets/plugins/datatables/jszip.min.js"></script>
+<script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+<script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+<script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+<!-- Data table init -->
+<script src="/assets/pages/datatables.init.js"></script>
+<script type="text/javascript">
+    TableManageButtons.init();
+</script>

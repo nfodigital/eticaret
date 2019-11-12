@@ -1,0 +1,287 @@
+﻿@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/_NewMaster.cshtml";
+}
+@model List<B2B.Dto.UrunlerDto.KategoriListele>
+
+<!-- Main Container -->
+  <section class="main-container col2-left-layout bounceInUp animated">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9 col-sm-push-3">
+          <div class="category-description std">
+            <div class="slider-items-products">
+              <div id="category-desc-slider" class="product-flexslider hidden-buttons">
+                <div class="slider-items slider-width-col1 owl-carousel owl-theme"> 
+                  
+                  <!-- Item -->
+                  <div class="item"> <a href="#"><img alt="" src="/assets/images/category-img1.jpg"></a>
+                    <div class="cat-img-title cat-bg cat-box">
+                      <div class="small-tag">En Yeni Ürünler</div>
+                      <h2 class="cat-heading">Bir çiçek ver geçecek</h2>
+                      <p>Bir buket çiçeğin geçiremeyeceği kırgınlık yoktur.</p>
+                    </div>
+                  </div>
+                  <!-- End Item --> 
+                  
+                  <!-- Item -->
+                  <div class="item"> <a href="#"><img alt="" src="/assets/images/category-img2.jpg"></a>
+                    <div class="cat-img-title cat-bg cat-box">
+                      <div class="small-tag">Gider Çiçek</div>
+                      <h2 class="cat-heading">Kalpleri kazanmak<br>bir Güle bakar</h2>
+                    </div>
+                    <!-- End Item --> 
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <article class="col-main">
+            <h2 class="page-heading"> <span class="page-heading-title">Ürünlerimiz</span> </h2>
+            <div class="display-product-option">
+              <div class="pager hidden-xs">
+                <div class="pages">
+                </div>
+              </div>
+              <div class="sorter">
+                <div class="view-mode"> <span title="Grid" class="button button-active button-grid">&nbsp;</span><a href="list.html" title="List" class="button-list">&nbsp;</a> </div>
+              </div>
+            </div>
+            <div class="category-products">
+              <ul class="products-grid">
+                  @foreach (var i in collection)
+                  {
+                 <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                  <div class="item-inner">
+                    <div class="item-img">
+                      <div class="item-img-info"><a href="#"  class="product-image"><img src="/assets/images/products-images/product16.jpg" ></a>
+                        <div class="new-label new-top-left">Yeni</div>
+                        <div class="box-hover">
+                          <ul class="add-to-links">
+                            <li><a class="link-quickview" href="/Products/ProductDetails/1">Detay</a> </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="item-info">
+                      <div class="info-inner">
+                        <div class="item-title"> <a  href="#">Düşlerde Aşk Gül ve Lilyumlar</a> </div>
+                        <div class="item-content">
+                          <div class="rating">
+                            <div class="ratings">
+                              <div class="rating-box">
+                                <div style="width:80%" class="rating"></div>
+                              </div>
+                              <p class="rating-links"> <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>
+                            </div>
+                          </div>
+                          <div class="item-price">
+                            <div class="price-box">
+                              <p class="old-price"><span class="price-label">Özel Fiyat:</span> <span class="price">₺259.00</span> </p>
+                              <p class="special-price"><span class="price-label">Normal Fiyat:</span><span class="price">₺300.00 </span> </p>
+                            </div>
+                          </div>
+                          <div class="action">
+                            <button class="button btn-cart" type="button" title="" data-original-title="Sipariş Ver"><span>Sipariş Ver</span></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                  }
+                
+                
+              </ul>
+            </div>
+            <div class="toolbar">
+              <div class="row">
+                <div class="col-lg-3 col-md-4">
+                </div>
+                <div class="col-lg-6 col-sm-7 col-md-5">
+                  <div class="pager">
+                    <div class="pages">
+                      <label>Sayfa:</label>
+                      <ul class="pagination">
+                        <li><a href="#">&laquo;</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-sm-12 col-md-3">
+                  <div id="limiter">
+                    <label>Göster: </label>
+                    <ul>
+                      <li><a href="#">09<span class="right-arrow"></span></a>
+                        <ul>
+                          <li><a href="#">15</a></li>
+                          <li><a href="#">20</a></li>
+                          <li><a href="#">30</a></li>
+                          <li><a href="#">35</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <a class="button-asc left" href="#" title="Set Descending Direction"><span class="top_arrow"></span></a> </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <!--	///*///======    End article  ========= //*/// --> 
+        </div>
+        <div class="col-left sidebar col-sm-3 col-xs-12 col-sm-pull-9">
+          <aside class="col-left sidebar">
+            <div class="side-nav-categories">
+              <div class="block-title">Kategoriler</div>
+              <!--block-title--> 
+			  <!-- BEGIN BOX-CATEGORY -->
+
+              <div class="box-content box-category">
+                  @foreach (var item in Model)
+                  {
+                      <ul>
+                  <li> <a class="active" href="/Products/List/@item.ID">@item.KategoriBaslik</a> <span class="subDropdown minus"></span>
+                    <ul class="level0_415" style="display:block">
+                        @foreach (var x in item.AltKategorileri)
+                        {
+                            <li> <a href="/Products/List/@x.ID">@x.KategoriBaslik</a></li>
+                        }
+                    </ul>
+                  </li>
+                 </ul> 
+                  }
+              </div>
+              <!--box-content box-category--> 
+            </div>
+                        
+            <div class="block block-layered-nav">
+              <div class="block-title">Filtrele</div>
+              <div class="block-content">
+                <p class="block-subtitle">Filtreleme Seçenekleri</p>
+                <dl id="narrow-by-list">
+                  <dt class="odd">Fiyata Göre</dt>
+                  <dd class="odd">
+                    <ol>
+                      <li> <a href="#"><span class="price">₺0.00</span> - <span class="price">₺99.99</span></a> (6) </li>
+                      <li> <a href="#"><span class="price">₺100.00</span> ve üzeri</a> (6) </li>
+                    </ol>
+                  </dd>
+                  <dt class="even">Seçenekler</dt>
+                  <dd class="even">
+                    <ol>
+                      <li> <a href="#">Saksı Çiçekleri</a> (9) </li>
+                      <li> <a href="#">Aranjmanlar</a> (4) </li>
+                      <li> <a href="#">Doğumgünü Çiçekleri</a> (1) </li>
+                      <li> <a href="#">Vazoda Çiçekler</a> (3) </li>
+                      <li> <a href="#">Kırmızı Güller</a> (6) </li>
+                      <li> <a href="#">Beyaz Güller</a> (7) </li>
+                      <li> <a href="#">Tasarım Çiçekler</a> (2) </li>
+                      <li> <a href="#">Orkide Çeşitleri</a> (1) </li>
+                      <li> <a href="#">Saksı Çiçekleri</a> (1) </li>
+                      <li> <a href="#">İndirimli Çiçekler</a> (3) </li>
+                      <li> <a href="#">Teraryum Çiçekleri</a> (3) </li>
+                    </ol>
+                  </dd>
+                  <dt class="odd">Özel Günler</dt>
+                  <dd class="odd">
+                    <ol>
+                      <li> <a href="#">Sevgiliye</a> (1) </li>
+                      <li> <a href="#">Doğumgünü</a> (1) </li>
+                      <li> <a href="#">Sevgililer günü</a> (5) </li>
+                      <li> <a href="#">Söz / Nişan / Düğün</a> (5) </li>
+                      <li> <a href="#">Geçmiş Olsun</a> (4) </li>
+                      <li> <a href="#">Yıl Dönümü</a> (3) </li>
+                      <li> <a href="#">Yeni Bebek</a> (1) </li>
+                      <li> <a href="#">Yeni İş / Terfi</a> (3) </li>
+                      <li> <a href="#">Özür Dilerim</a> (5) </li>
+                      <li> <a href="#">Cenaze / Çelenk</a> (5) </li>
+                      <li> <a href="#">Açılış / Tören</a> (1) </li>
+                    </ol>
+                  </dd>
+                  <dt class="last even">Mevsim / Kır Çiçekleri</dt>
+                </dl>
+              </div>
+            </div>
+            <div class="block block-cart">
+              <div class="block-title ">Sepetim</div>
+              <div class="block-content">
+                <div class="summary">
+                  <p class="amount">There are <a href="shopping_cart.html">2 items</a> in your cart.</p>
+                  <p class="subtotal"> <span class="label">Cart Subtotal:</span> <span class="price">$27.99</span> </p>
+                </div>
+                <div class="ajax-checkout">
+                  <button class="button button-checkout" title="Submit" type="submit"><span>Checkout</span></button>
+                </div>
+                <p class="block-subtitle">Recently added item(s) </p>
+                <ul>
+                  <li class="item"> <a href="shopping_cart.html" title="Fisher-Price Bubble Mower" class="product-image"><img src="/assets/images/products-images/product10.jpg" alt="Fisher-Price Bubble Mower"></a>
+                    <div class="product-details">
+                      <div class="access"> <a href="shopping_cart.html" title="Remove This Item" class="btn-remove1"> <span class="icon"></span> Remove </a> </div>
+                      <strong>1</strong> x <span class="price">$19.99</span>
+                      <p class="product-name"> <a href="shopping_cart.html">Skater Dress In Leaf Print Grouped Product</a> </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+			
+            <div class="block block-poll">
+              <div class="block-title">Kısa Bir Soru</div>
+              <form id="pollForm" action="#" method="post" onSubmit="return validatePollAnswerIsSelected();">
+                <div class="block-content">
+                  <p class="block-subtitle">İnternetten çiçek alırken önceliğiniz nedir?</p>
+                  <ul id="poll-answers">
+                    <li class="odd">
+                      <input type="radio" name="vote" class="radio poll_vote" id="vote_5" value="5">
+                      <span class="label">
+                      <label for="vote_5">Çiçeğin Cinsi</label>
+                      </span> </li>
+                    <li class="even">
+                      <input type="radio" name="vote" class="radio poll_vote" id="vote_6" value="6">
+                      <span class="label">
+                      <label for="vote_6">Çiçeğin Fiyatı</label>
+                      </span> </li>
+                    <li class="odd">
+                      <input type="radio" name="vote" class="radio poll_vote" id="vote_7" value="7">
+                      <span class="label">
+                      <label for="vote_7">Görseldeki Sunuma Bakıyorum</label>
+                      </span> </li>
+                    <li class="last even">
+                      <input type="radio" name="vote" class="radio poll_vote" id="vote_8" value="8">
+                      <span class="label">
+                      <label for="vote_8">Gönderim Hızı</label>
+                      </span> </li>
+                  </ul>
+                  <div class="actions">
+                    <button type="submit" title="Vote" class="button button-vote"><span>Oy Ver</span></button>
+                  </div>
+                </div>
+              </form>
+            </div>>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Main Container End -->
+
+    $("#cmdGirisYap").on("click", function () {
+            $.post('@Url.Content("~/")Login/DoLogin', {
+                'username': $('#login-username').val(), 'password': $('#login-password').val()
+            }, function (d) {
+                if (d.ReturnValue == 1) {
+                    window.location = '/Home/Index';
+                }
+                else if (d.ReturnValue== 999) {
+                    window.location = '/Admin/'
+                }
+                $.Notification.notify(d.Error, ' top right', 'Giriş Yap', d.ReturnMsg)
+            });
+        });

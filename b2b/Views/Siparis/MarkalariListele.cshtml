@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "MarkalariListele";
+    Layout = "~/Views/_Master.cshtml";
+}
+
+<!-- Page-Title -->
+<div class="row">
+    <div class="col-sm-12">
+
+        <h4 class="page-title">Detaylı arama</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Ana Sayfa</a>
+            </li>
+            <li>
+                Sipariş
+            </li>
+            <li class="active">Detaylı arama</li>
+        </ol>
+
+    </div>
+</div>
+<!-- Page-Title -->
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>DETAYLI ARAMA</b></h4>
+            <p class="text-muted m-b-30 font-13">
+                Aşağıda yer alan arama formunu doldurunuz.
+            </p>
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-horizontal" role="form" action="/Products/ProductList">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Bölüm seçiniz</label>
+                            <div class="col-sm-10">
+                                <select class="form-control query-build" id="PRODUCT_CATEGORY" name="PRODUCT_CATEGORY" data-model="PRODUCT_CATEGORY">
+                                    <option value="">Tümünü Göster</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Marka Seçiniz</label>
+                            <div class="col-sm-10">
+                                <select class="form-control query-build" id="PRODUCT_MARKAID" name="PRODUCT_MARKAID" data-model="PRODUCT_MARKAID">
+                                    <option value="">Tümünü Göster</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label ">Model Seçiniz</label>
+                            <div class="col-sm-10">
+                                <select class="form-control query-build" id="PRODUCT_MODEL" name="PRODUCT_MODEL" data-model="PRODUCT_MODEL">
+                                    <option value="">Tüm modeller için</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Sözcük</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control query-build" name="PRODUCT_NAME" placeholder="Tümünü göstermek için boş bırakın" id="PRODUCT_NAME" data-model="PRODUCT_NAME">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <button class="ladda-button btn btn-primary" data-style="expand-left" >
+                                    Arama Yap
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="portlet">
+            <div class="portlet-heading bg-danger">
+                <h3 class="portlet-title">
+                    ARAMA YAPMADAN ÖNCE
+                </h3>
+                <div class="portlet-widgets">
+                    <a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion1" href="#bg-danger"><i class="ion-minus-round"></i></a>
+                    <span class="divider"></span>
+                    <a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="bg-danger" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    Daha fazla sonuca ulaşabilmek için arama kriterlerini mümkün olduğunda kısıtlamamaya çalışın. Böylece daha fazla sonuç elde edeceksiniz.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="widget-bg-color-icon card-box">
+            <div class="bg-icon bg-icon-info pull-left">
+                <i class="icon-layers text-inverse"></i>
+            </div>
+            <div class="text-right">
+                <h3 class="text-dark"><b class="counter">@ViewBag.Urunler</b></h3>
+                <p class="text-muted">toplam ürün arasında aranacak</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
+<!-- ladda button  -->
+<script src="/assets/plugins/ladda-buttons/js/spin.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
+<script src="/assets/plugins/ladda-buttons/js/ladda.jquery.min.js"></script>
+
+<script>
+    $('.ladda-button').ladda('bind', { timeout: 2000 });
+
+    // Bind progress buttons and simulate loading progress
+    Ladda.bind('.progress-demo .ladda-button', {
+        callback: function (instance) {
+            var progress = 0;
+            var interval = setInterval(function () {
+                progress = Math.min(progress + Math.random() * 0.1, 1);
+                instance.setProgress(progress);
+
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+    });
+
+
+    var l = $('.ladda-button-demo').ladda();
+
+    l.click(function () {
+        // Start loading
+        l.ladda('start');
+
+        // Timeout example
+        // Do something in backend and then stop ladda
+        setTimeout(function () {
+            l.ladda('stop');
+        }, 12000)
+    });
+
+    $.get('@Url.Content("~/")Siparis/MarkaVer', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#PRODUCT_MARKAID').append('<option value=' + d[i].Id + '>' + d[i].Marka + '</option>')
+        });
+    });
+
+    $.get('@Url.Content("~/")Siparis/KategoriVer', {
+    }, function (d) {
+        $.each(d, function (i, val) {
+            $('#PRODUCT_CATEGORY').append('<option value=' + d[i].Id + '>' + d[i].KategoriBaslik + '</option>')
+        });
+    });
+
+    $('#aramaYap').click(function (e) {
+        e.preventDefault();
+        $.post('@Url.Content("~/")Products/ProductList', {
+            PRODUCT_CATEGORY: $('#PRODUCT_CATEGORY option:selected').val(),
+            PRODUCT_MARKAID: $('#PRODUCT_MARKAID option:selected').val(),
+            PRODUCT_MODELID: $('#PRODUCT_MODELID option:selected').val(),
+            PRODUCT_NAME: $('#PRODUCT_NAME').val()
+        }, function (d) {
+            
+        });
+    });
+
+    function getArrays() {
+        var _a = new Array();
+        $('.query-build').each(function (i, k) {
+            if ($("option:selected", this).val() != '*') {
+                _a.push($(k).data('model'));
+            }
+        });
+        return _a;
+    }
+</script>
