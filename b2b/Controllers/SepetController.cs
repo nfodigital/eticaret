@@ -558,9 +558,9 @@ namespace B2B.Controllers
             {
 
                 Iyzipay.Options _o = new Iyzipay.Options();
-                _o.ApiKey = "sandbox-3rHpqIv8uvy3rofE6e8SGMbAhHKAloOr";
-                _o.SecretKey = "sandbox-zhp0x5PsQRh5ri8xk1RiOzgickEMBHDt";
-                _o.BaseUrl = "https://sandbox-api.iyzipay.com";
+                _o.ApiKey = "HgsF11XBqB86seU29Kv80hHvfgKsjZ3t";
+                _o.SecretKey = "MVtf0Ny7bLOwukZ8rh3dZiTo0OaEd7sO";
+                _o.BaseUrl = "https://api.iyzipay.com";
 
                 CreatePaymentRequest request = new CreatePaymentRequest();
                 request.Locale = Locale.TR.ToString();
