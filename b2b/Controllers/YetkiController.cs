@@ -13,23 +13,14 @@ namespace B2B.Controllers
         {
             var isAuthorized = base.AuthorizeCore(httpContext);
             isAuthorized = false;
-
-            if (httpContext.Session["UserInfo"] != null)
+            if (httpContext.Request.Cookies["userId"] != null) //superadmin
             {
-                B2B.Dto.UserHolder p = (B2B.Dto.UserHolder)httpContext.Session["UserInfo"];
-                string mevcutYetkiler = p.KullaniciYetkisi;
-
-                if (mevcutYetkiler == "su") //superadmin
-                {
-                    isAuthorized = true;
-                }
+                return true;
             }
             else
             {
-                httpContext.Response.Redirect("/Home/");
+                return false;
             }
-            return isAuthorized;
         }
-
     }
 }

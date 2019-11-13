@@ -443,7 +443,7 @@ namespace B2B.Controllers
             options.SecretKey = "MVtf0Ny7bLOwukZ8rh3dZiTo0OaEd7sO";
             options.BaseUrl = "https://api.iyzipay.com";
 
-            
+
             //options.ApiKey = "sandbox-3rHpqIv8uvy3rofE6e8SGMbAhHKAloOr";
             //options.SecretKey = "sandbox-zhp0x5PsQRh5ri8xk1RiOzgickEMBHDt";
             //options.BaseUrl = "https://sandbox-api.iyzipay.com";
@@ -461,11 +461,9 @@ namespace B2B.Controllers
 
         public ActionResult callBack(string status, string mdStatus, string conversationData, string paymentId, string conversationId)
         {
-            var xy = Request;
             if (mdStatus == "1" && status == "success")
             {
-                var x = ctx.Siparisler.FirstOrDefault(q => q.ORDER_PAYMENT == conversationId);
-                x.SiparisDurumu = 1;
+
                 CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
                 request.Locale = Locale.TR.ToString();
                 request.ConversationId = conversationId;
@@ -475,9 +473,18 @@ namespace B2B.Controllers
                 Iyzipay.Options options = new Iyzipay.Options();
                 options = getIyziOptions();
                 ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
-                Kernel.Mail("gidercicek@gmail.com", "Yeni sipariş: " + x.SiparisNo + " - " + string.Format("{0:C}", x.SiparisToplami) + " tutarında");
-                ctx.SaveChanges();
-                Response.Redirect("/Siparis/Basarili");
+                if (threedsPayment.Status == "success")
+                {
+                    var x = ctx.Siparisler.FirstOrDefault(q => q.ORDER_PAYMENT == conversationId);
+                    x.SiparisDurumu = 1;
+                    Kernel.Mail("gidercicek@gmail.com", "Yeni sipariş: " + x.SiparisNo + " - " + string.Format("{0:C}", x.SiparisToplami) + " tutarında");
+                    ctx.SaveChanges();
+                    Response.Redirect("/Siparis/Basarili");
+                }
+                else
+                {
+                    Response.Redirect("/Siparis/Problem/?m=" + threedsPayment.ErrorMessage);
+                }
             }
             else
             {
@@ -634,7 +641,7 @@ namespace B2B.Controllers
                 MethodStatusDto _m = new MethodStatusDto();
                 var sepet = sepetAl();
                 // br = _odeme.KrediKartindanCekimYap(_veriler.PosBilgileri);
-            //    _m = iyziOdemeAl(_veriler);
+                //    _m = iyziOdemeAl(_veriler);
                 if (_m.ReturnMsg == "success")
                 {
                     SiparisController _siparis = new SiparisController();

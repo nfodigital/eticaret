@@ -103,7 +103,7 @@ namespace B2B.Controllers
                     UserInfo.KullaniciYetkisi = u.KullaniciYetkisi;
 
                     Session["UserInfo"] = UserInfo;
-                    var _cookie = new HttpCookie("userId"); _cookie.Expires = DateTime.Now.AddDays(2);
+                    var _cookie = new HttpCookie("userId"); _cookie.Expires = DateTime.Now.AddDays(365);
                     _cookie["userId"] = UserInfo.UserId.ToString(); Response.Cookies.Add(_cookie);
 
                     // Sepeti Yerine koyalım
