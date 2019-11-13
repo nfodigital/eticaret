@@ -414,92 +414,6 @@ namespace B2B.Controllers
             return Yazdir;
         }
 
-        public MethodStatusDto iyziOdemeAl(LastSectionDto veriler)
-        {
-            MethodStatusDto _m = new MethodStatusDto();
-            try
-            {
-                Iyzipay.Options _o = new Iyzipay.Options();
-                _o.ApiKey = "HgsF11XBqB86seU29Kv80hHvfgKsjZ3t";
-                _o.SecretKey = "MVtf0Ny7bLOwukZ8rh3dZiTo0OaEd7sO";
-                _o.BaseUrl = "https://api.iyzipay.com";
-
-                CreatePaymentRequest request = new CreatePaymentRequest();
-                request.Locale = Locale.TR.ToString();
-                request.ConversationId = "468251";
-                request.Price = veriler.PosBilgileri.tutar.ToString().Replace(",", ".");
-                request.PaidPrice = veriler.PosBilgileri.tutar.ToString().Replace(",", ".");
-                request.Currency = Currency.TRY.ToString();
-                request.Installment = 1;
-                request.BasketId = "B67832";
-                request.PaymentChannel = PaymentChannel.WEB.ToString();
-                request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-
-                PaymentCard paymentCard = new PaymentCard();
-                paymentCard.CardHolderName = veriler.PosBilgileri.kartSahibi;
-                paymentCard.CardNumber = veriler.PosBilgileri.kartNumarasi.ToString();
-                paymentCard.ExpireMonth = veriler.PosBilgileri.ay.ToString();
-                paymentCard.ExpireYear = veriler.PosBilgileri.yil.ToString();
-                paymentCard.Cvc = veriler.PosBilgileri.guvenlikKodu.ToString();
-                paymentCard.RegisterCard = 0;
-                request.PaymentCard = paymentCard;
-
-                Buyer buyer = new Buyer();
-                buyer.Id = Session.SessionID;
-                buyer.Name = veriler.SiparisVerenAdSoyad;
-                buyer.Surname = veriler.SiparisVerenAdSoyad;
-                buyer.GsmNumber = veriler.SiparisVerenTelefon;
-                buyer.Email = "email@email.com";
-                buyer.IdentityNumber = "00000";
-                buyer.LastLoginDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                buyer.RegistrationDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                buyer.RegistrationAddress = veriler.AcikAdres;
-                buyer.Ip = Request.UserHostAddress;
-                buyer.City = "Mersin";
-                buyer.Country = "Turkey";
-                buyer.ZipCode = "33010";
-                request.Buyer = buyer;
-
-                Address shippingAddress = new Address();
-                shippingAddress.ContactName = veriler.AliciAdSoyad;
-                shippingAddress.City = "Mersin";
-                shippingAddress.Country = "Turkey";
-                shippingAddress.Description = "Alıcı Kişi" + veriler.AliciAdSoyad;
-                shippingAddress.ZipCode = "33010";
-                request.ShippingAddress = shippingAddress;
-
-                Address billingAddress = new Address();
-                billingAddress.ContactName = veriler.AliciAdSoyad;
-                billingAddress.City = "Mersin";
-                billingAddress.Country = "Turkey";
-                billingAddress.Description = veriler.AcikAdres;
-                billingAddress.ZipCode = "0";
-                request.BillingAddress = billingAddress;
-
-                List<BasketItem> basketItems = new List<BasketItem>();
-                //al
-                basketItems = veriler.BasketItems;
-                //ver
-                request.BasketItems = basketItems;
-
-                Payment payment = Payment.Create(request, _o);
-                if (payment.Status == "success")
-                {
-                    _m.ReturnMsg = payment.Status;
-                }
-                else
-                {
-                    _m.ReturnMsg = payment.ErrorMessage;
-                }
-                _m.Error = payment.ErrorMessage;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return _m;
-        }
-
         public List<Iyzipay.Model.BasketItem> SepetUrunleri()
         {
             var _s = sepetAl();
@@ -522,7 +436,19 @@ namespace B2B.Controllers
 
             return _items;
         }
+        public Iyzipay.Options getIyziOptions()
+        {
+            Iyzipay.Options options = new Iyzipay.Options();
+            options.ApiKey = "HgsF11XBqB86seU29Kv80hHvfgKsjZ3t";
+            options.SecretKey = "MVtf0Ny7bLOwukZ8rh3dZiTo0OaEd7sO";
+            options.BaseUrl = "https://api.iyzipay.com";
 
+            
+            //options.ApiKey = "sandbox-3rHpqIv8uvy3rofE6e8SGMbAhHKAloOr";
+            //options.SecretKey = "sandbox-zhp0x5PsQRh5ri8xk1RiOzgickEMBHDt";
+            //options.BaseUrl = "https://sandbox-api.iyzipay.com";
+            return options;
+        }
 
         public LastSectionDto veri = new LastSectionDto();
         public string body = "";
@@ -533,46 +459,93 @@ namespace B2B.Controllers
             return PartialView();
         }
 
-        public ActionResult callBack(string status, string mdStatus)
+        public ActionResult callBack(string status, string mdStatus, string conversationData, string paymentId, string conversationId)
         {
-            if (status == "success")
+            var xy = Request;
+            if (mdStatus == "1" && status == "success")
             {
-                //burda siparisekle
+                var x = ctx.Siparisler.FirstOrDefault(q => q.ORDER_PAYMENT == conversationId);
+                x.SiparisDurumu = 1;
+                CreateThreedsPaymentRequest request = new CreateThreedsPaymentRequest();
+                request.Locale = Locale.TR.ToString();
+                request.ConversationId = conversationId;
+                request.PaymentId = paymentId;
+                request.ConversationData = conversationData;
+
+                Iyzipay.Options options = new Iyzipay.Options();
+                options = getIyziOptions();
+                ThreedsPayment threedsPayment = ThreedsPayment.Create(request, options);
+                Kernel.Mail("gidercicek@gmail.com", "Yeni sipariş: " + x.SiparisNo + " - " + string.Format("{0:C}", x.SiparisToplami) + " tutarında");
+                ctx.SaveChanges();
                 Response.Redirect("/Siparis/Basarili");
             }
             else
             {
-                Response.Redirect("/Siparis/Problem/" + mdStatus);
+                string donenDeger = "";
+                switch (mdStatus)
+                {
+                    case "0":
+                        donenDeger = "3-D Secure imzası geçersiz veya doğrulama";
+                        break;
+                    case "2":
+                        donenDeger = "Kart sahibi veya bankası sisteme kayıtlı değil";
+                        break;
+                    case "3":
+                        donenDeger = "Kartın bankası sisteme kayıtlı değil";
+                        break;
+                    case "5":
+                        donenDeger = "Doğrulama yapılamıyor";
+                        break;
+                    case "6":
+                        donenDeger = "3-D Secure hatası";
+                        break;
+                    case "7":
+                        donenDeger = "Sistem hatası";
+                        break;
+                    case "8":
+                        donenDeger = "Bilinmeyen kart no";
+                        break;
+                    case "4":
+                        donenDeger = "Doğrulama denemesi, kart sahibi sisteme daha sonra kayıt olmayı seçmiş";
+                        break;
+                    default:
+                        donenDeger = "Bilinmeyen bir hata oluştu";
+                        break;
+                }
+                Response.Redirect("/Siparis/Problem/?m=" + donenDeger);
             }
             return View();
         }
 
+        public string sayiSalla()
+        {
+            return System.Guid.NewGuid().ToString("N");
+        }
 
         //3d odeme methodu
         public JsonResult odemeYap(LastSectionDto datas)
         {
             MethodStatusDto _m = new MethodStatusDto();
+            SiparisController _siparis = new SiparisController();
             datas.PosBilgileri.tutar = Convert.ToDecimal(SepetGenelToplamVerDecimalCinsinden(true, sepetAl()));
             datas.BasketItems = SepetUrunleri();
             try
             {
 
                 Iyzipay.Options _o = new Iyzipay.Options();
-                _o.ApiKey = "sandbox-3rHpqIv8uvy3rofE6e8SGMbAhHKAloOr";
-                _o.SecretKey = "sandbox-zhp0x5PsQRh5ri8xk1RiOzgickEMBHDt";
-                _o.BaseUrl = "https://sandbox-api.iyzipay.com";
+                _o = getIyziOptions();
 
                 CreatePaymentRequest request = new CreatePaymentRequest();
                 request.Locale = Locale.TR.ToString();
-                request.ConversationId = "367311";
+                request.ConversationId = sayiSalla(); //burada
                 request.Price = datas.PosBilgileri.tutar.ToString().Replace(",", ".");
                 request.PaidPrice = datas.PosBilgileri.tutar.ToString().Replace(",", ".");
                 request.Currency = Currency.TRY.ToString();
                 request.Installment = 1;
-                request.BasketId = "B67832";
+                request.BasketId = sepetAl().SessionId;
                 request.PaymentChannel = PaymentChannel.WEB.ToString();
                 request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-                request.CallbackUrl = "http://cicekgider.com/Sepet/Callback"; //3d sayfasından sonra gideceği url
+                request.CallbackUrl = "http://www.cicekgider.com/Sepet/Callback"; //3d sayfasından sonra gideceği url
 
                 PaymentCard paymentCard = new PaymentCard();
                 paymentCard.CardHolderName = datas.PosBilgileri.kartSahibi;
@@ -603,7 +576,7 @@ namespace B2B.Controllers
                 shippingAddress.ContactName = datas.AliciAdSoyad;
                 shippingAddress.City = "Mersin";
                 shippingAddress.Country = "Turkey";
-                shippingAddress.Description = "Alıcı Kişi" + datas.AliciAdSoyad;
+                shippingAddress.Description = "Alıcı Kişi " + datas.AliciAdSoyad;
                 shippingAddress.ZipCode = "33010";
                 request.ShippingAddress = shippingAddress;
 
@@ -614,7 +587,6 @@ namespace B2B.Controllers
                 billingAddress.Description = datas.AcikAdres;
                 billingAddress.ZipCode = "0";
                 request.BillingAddress = billingAddress;
-
                 List<BasketItem> basketItems = new List<BasketItem>();
                 //al
                 basketItems = datas.BasketItems;
@@ -623,12 +595,12 @@ namespace B2B.Controllers
 
 
                 ThreedsInitialize threedsInitialize = ThreedsInitialize.Create(request, _o); //3d init
-
-
-
                 // Payment payment = Payment.Create(request, _o);
                 if (threedsInitialize.Status == "success") //3d init isteği başarılı ise,sayfa henüz açılmadı
                 {
+
+                    var sepet = sepetAl();
+                    _siparis.SiparisEkle("Kredi Kartı", datas.AliciAdSoyad, datas.SiparisVerenAdSoyad + " - Telefon: " + datas.SiparisVerenTelefon, datas.Notlar, datas.AcikAdres + " Tarif: " + datas.AdresTarifi, sepet, request.ConversationId);
                     body = threedsInitialize.HtmlContent; //3d sayfasının htmli , viewda ekrana bastırılacak
                     veri = datas;
                     _m.ReturnMsg = body;
@@ -639,7 +611,7 @@ namespace B2B.Controllers
                 }
                 else
                 {
-                    _m.ReturnMsg = "3d işlemi başlatılırken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.";
+                    _m.ReturnMsg = threedsInitialize.ErrorMessage;
                 }
 
             }
@@ -662,13 +634,13 @@ namespace B2B.Controllers
                 MethodStatusDto _m = new MethodStatusDto();
                 var sepet = sepetAl();
                 // br = _odeme.KrediKartindanCekimYap(_veriler.PosBilgileri);
-                _m = iyziOdemeAl(_veriler);
+            //    _m = iyziOdemeAl(_veriler);
                 if (_m.ReturnMsg == "success")
                 {
                     SiparisController _siparis = new SiparisController();
                     try
                     {
-                        _siparis.SiparisEkle("Kredi Kartı", _veriler.AliciAdSoyad, _veriler.SiparisVerenAdSoyad + "-Telefon: " + _veriler.SiparisVerenTelefon, _veriler.Notlar, _veriler.AcikAdres + " Tarif: " + _veriler.AdresTarifi, sepet);
+                        //_siparis.SiparisEkle("Kredi Kartı", _veriler.AliciAdSoyad, _veriler.SiparisVerenAdSoyad + "-Telefon: " + _veriler.SiparisVerenTelefon, _veriler.Notlar, _veriler.AcikAdres + " Tarif: " + _veriler.AdresTarifi, sepet);
                         _veriler.Success = true;
                     }
                     catch (Exception excep)

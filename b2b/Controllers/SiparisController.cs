@@ -181,7 +181,7 @@ namespace B2B.Controllers
                         {
                             try
                             {
-                                SiparisEkle(odemeTipi, AliciAdSoyad, SiparisiVeren, SiparisNotlari, adres, _sepetc.sepetAl());
+                                SiparisEkle(odemeTipi, AliciAdSoyad, SiparisiVeren, SiparisNotlari, adres, _sepetc.sepetAl(), "0");
                                 m.Error = "success";
                                 m.ReturnMsg = "Siparişiniz başarıyla oluşturuldu.";
                                 m.ReturnValue = 1;
@@ -204,7 +204,7 @@ namespace B2B.Controllers
                     {
                         try
                         {
-                            SiparisEkle(odemeTipi, AliciAdSoyad, SiparisiVeren, SiparisNotlari, adres, _sepetc.sepetAl());
+                            SiparisEkle(odemeTipi, AliciAdSoyad, SiparisiVeren, SiparisNotlari, adres, _sepetc.sepetAl(),"0");
                             m.Error = "HAVALE";
                             m.ReturnMsg = "Siparişiniz başarıyla oluşturuldu";
                             m.ReturnValue = 1;
@@ -225,7 +225,7 @@ namespace B2B.Controllers
                     }
                     else if (odemeTipi == "NAKİT")
                     {
-                        SiparisEkle(odemeTipi, AliciAdSoyad, SiparisNotlari, SiparisiVeren, adres, _sepetc.sepetAl());
+                        SiparisEkle(odemeTipi, AliciAdSoyad, SiparisNotlari, SiparisiVeren, adres, _sepetc.sepetAl(),"0");
                         m.Error = "NAKİT";
                         m.ReturnMsg = "Siparişiniz başarıyla oluşturuldu";
                         m.ReturnValue = 1;
@@ -238,7 +238,7 @@ namespace B2B.Controllers
             }
             return Json(m, JsonRequestBehavior.AllowGet);
         }
-        public bool SiparisEkle(string odemeTipi, string AliciAdSoyad, string SiparisVerenAdSoyad, string siparisNotlari, string adres, SepetDto sepet)
+        public bool SiparisEkle(string odemeTipi, string AliciAdSoyad, string SiparisVerenAdSoyad, string siparisNotlari, string adres, SepetDto sepet, string uniq)
         {
 
             bool sonuc = false;
@@ -265,7 +265,7 @@ namespace B2B.Controllers
                 Siparis.SiparisVeren = UserInfo.UserId;
                 Siparis.KdvOrani = 18;
                 Siparis.FirmaId = UserInfo.FirmaId;
-                Siparis.SiparisDurumu = 1;
+                Siparis.SiparisDurumu = 0;
                 Siparis.OdemeTipi = odemeTipi;
                 Siparis.SadeceTarih = DateTime.Today;
                 Siparis.SiparisNotlari = "Alıcı Adı Soyadı:" + AliciAdSoyad + " Not: " + siparisNotlari;
@@ -273,6 +273,7 @@ namespace B2B.Controllers
                 Siparis.SiparisAdresi = adres;
                 Siparis.SiparisIskontoOrani = SepetHesabi.IskontoOrani;
                 Siparis.SiparisiVerenAdSoyad = Siparis.SiparisiVerenAdSoyad;
+                Siparis.ORDER_PAYMENT = uniq;
                 ctx.Siparisler.Add(Siparis);
                 ctx.SaveChanges();
 
@@ -323,7 +324,7 @@ namespace B2B.Controllers
                 //send email
                 try
                 {
-                    Kernel.Mail("gidercicek@gmail.com", "Yeni sipariş: " + siparisNo + " - " + Siparis.SiparisToplami + " tutarında");
+                    
                 }
                 catch (Exception exc)
                 {

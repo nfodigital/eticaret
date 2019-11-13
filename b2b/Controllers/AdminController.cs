@@ -27,11 +27,11 @@ namespace B2B.Controllers
             AdminIndex AdminIndex_Classes = new AdminIndex(); AdminIndex_Classes.AdminUyarilari = new List<string>();
             var _Siparisler = ctx.Siparisler.ToList();
 
-            var SonSiparisler = (from item in ctx.Siparisler.Where(q => q.SiparisDurumu == 0).OrderByDescending(q => q.Id).ToList()
+            var SonSiparisler = (from item in ctx.Siparisler.Where(q => q.SiparisDurumu != 0).OrderByDescending(q => q.Id).ToList()
                                  select new AdminHomePage_SonSiparisler()
                                  {
                                      Id = item.Id,
-                                     SiparisDurumu = item.SiparisDurumu == 0 ? "Onay Bekliyor" : "Onaylandı, Gönderim Bekliyor",
+                                     SiparisDurumu = item.SiparisDurumu == 1 ? "Onay Bekliyor" : "Onaylandı, Gönderim Bekliyor",
                                      SiparisTarihi = item.SadeceTarih,
                                      SiparisToplami = item.SiparisToplami.GetValueOrDefault(0),
                                      Firma = Cf.FirmaAdiVer(item.FirmaId)
@@ -61,7 +61,7 @@ namespace B2B.Controllers
             CommonFunctionsController OrtakFonksiyonlar = new CommonFunctionsController();
             ProductsController UrunFonksiyonlari = new ProductsController();
 
-            var Siparisler = (from ar in ctx.Siparisler.OrderByDescending(q => q.Id).ToList()
+            var Siparisler = (from ar in ctx.Siparisler.Where(q => q.SiparisDurumu != 0).OrderByDescending(q => q.Id).ToList()
                               select new AdminHomePage_SonSiparisler
                               {
                                   Firma = OrtakFonksiyonlar.FirmaAdiVer(ar.FirmaId),
@@ -407,21 +407,21 @@ namespace B2B.Controllers
         {
             return Json(FotograflarListesi, JsonRequestBehavior.AllowGet);
         }
-       
+
         [ValidateInput(false)]
         public JsonResult UrunKaydetveyaYenile(PRODUCTS Product)
         {
             string[] _latest = null;
-            string _newStr = Product.AlternatifKategoriler.Substring(1, Product.AlternatifKategoriler.Length-2);
+            string _newStr = Product.AlternatifKategoriler.Substring(1, Product.AlternatifKategoriler.Length - 2);
             string _newStr2 = _newStr.Replace('"', ' ').Trim();
             Product.AlternatifKategoriler = _newStr2;
-            
+
             MethodStatusDto Status = new MethodStatusDto();
             try
             {
-                
+
                 PRODUCTS Urun = ctx.Urunler.SingleOrDefault(q => q.Id == Product.Id);
-                
+
                 if (Urun != null)
                 {
                     if (Urun.UrunKodu != Product.UrunKodu && !UrunKoduKontrol(Product.UrunKodu))
@@ -486,7 +486,7 @@ namespace B2B.Controllers
         public ActionResult UrunDuzenlePage(int Id)
         {
             PRODUCTS Urun = ctx.Urunler.SingleOrDefault(q => q.Id == Id);
-           // Urun.AlternatifKategoriler = HttpUtility.HtmlDecode(Urun.AlternatifKategoriler);
+            // Urun.AlternatifKategoriler = HttpUtility.HtmlDecode(Urun.AlternatifKategoriler);
             Urun.UrunAciklama = Kernel.EncodeHTML(Urun.UrunAciklama);
             ViewBag.UrunModelName = ModelNameVer(Urun.ModelId);
             return View(Urun);

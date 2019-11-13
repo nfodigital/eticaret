@@ -377,6 +377,8 @@ namespace B2B.Models.Entity
         public string SiparisAyrintilari { get; set; }
         [Column("ORDER_SIPARISVEREN")]
         public string SiparisiVerenAdSoyad { get; set; }
+        [Column("ORDER_PAYMENT")]
+        public string ORDER_PAYMENT { get; set; }
 
         [ForeignKey("SiparisNo")]
         public virtual ICollection<ORDER_PRODUCTS> SiparisUrunleri { get; set; }
