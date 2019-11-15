@@ -27,11 +27,11 @@ namespace B2B.Controllers
             AdminIndex AdminIndex_Classes = new AdminIndex(); AdminIndex_Classes.AdminUyarilari = new List<string>();
             var _Siparisler = ctx.Siparisler.ToList();
 
-            var SonSiparisler = (from item in ctx.Siparisler.Where(q => q.SiparisDurumu != 0).OrderByDescending(q => q.Id).ToList()
+            var SonSiparisler = (from item in ctx.Siparisler.Where(q => q.SiparisDurumu == 1).OrderByDescending(q => q.Id).ToList()
                                  select new AdminHomePage_SonSiparisler()
                                  {
                                      Id = item.Id,
-                                     SiparisDurumu = item.SiparisDurumu == 1 ? "Onay Bekliyor" : "Onaylandı, Gönderim Bekliyor",
+                                     SiparisDurumu = siparisDurumlari(item.SiparisDurumu),
                                      SiparisTarihi = item.SadeceTarih,
                                      SiparisToplami = item.SiparisToplami.GetValueOrDefault(0),
                                      Firma = Cf.FirmaAdiVer(item.FirmaId)
@@ -55,6 +55,18 @@ namespace B2B.Controllers
             if (_pStokKontrol != null) { AdminIndex_Classes.AdminUyarilari.Add("Dikkat! Stoğu AZALAN ürünler mevcut, ürünlere gözatmanız gerekmektedir."); _pStokKontrol = null; }
             return View(AdminIndex_Classes);
         }
+        public string siparisDurumlari(int durumId)
+        {
+            var d = ctx.SiparisDurumlari.FirstOrDefault(q => q.Id == durumId);
+            try
+            {
+                return d.SiparisDurumu;
+            }
+            catch (Exception)
+            {
+                return "Belirtilmemiş";
+            }
+        }
         [AuthorizeUser(Roles = ("su"))]
         public ActionResult SiparisleriListele()
         {
@@ -66,7 +78,7 @@ namespace B2B.Controllers
                               {
                                   Firma = OrtakFonksiyonlar.FirmaAdiVer(ar.FirmaId),
                                   Id = ar.Id,
-                                  SiparisDurumu = OrtakFonksiyonlar.SiparisDurumuVer(ar.SiparisDurumu),
+                                  SiparisDurumu = siparisDurumlari(ar.SiparisDurumu),
                                   SiparisTarihi = ar.SadeceTarih,
                                   SiparisToplami = ar.SiparisToplami.GetValueOrDefault(0),
                                   UrunlerToplami = ar.SiparisUrunleri.Count(),
@@ -81,7 +93,6 @@ namespace B2B.Controllers
             SiparisDuzenleDto SiparisDuzenle = new SiparisDuzenleDto();
             SiparisDuzenle.Siparis = ctx.Siparisler.FirstOrDefault(q => q.Id == Id);
             SiparisDuzenle.SiparisDurumlari = ctx.SiparisDurumlari.ToList();
-
             return View(SiparisDuzenle);
         }
         //Hesaplar
@@ -268,6 +279,15 @@ namespace B2B.Controllers
         }
         [AuthorizeUser(Roles = ("su"))]
         public PartialViewResult SiparisYazdir(int Id)
+        {
+            SiparisDuzenleDto SiparisDuzenle = new SiparisDuzenleDto();
+            SiparisDuzenle.Siparis = ctx.Siparisler.Where(q => q.Id == Id).FirstOrDefault();
+            SiparisDuzenle.SiparisDurumlari = ctx.SiparisDurumlari.ToList();
+
+            return PartialView(SiparisDuzenle);
+        }
+        [AuthorizeUser(Roles = ("su"))]
+        public PartialViewResult SYaz(int Id)
         {
             SiparisDuzenleDto SiparisDuzenle = new SiparisDuzenleDto();
             SiparisDuzenle.Siparis = ctx.Siparisler.Where(q => q.Id == Id).FirstOrDefault();

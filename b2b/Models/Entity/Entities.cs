@@ -688,4 +688,19 @@ namespace B2B.Models.Entity
         public string mahalle_ad_kucuk { get; set; }
 
     }
+
+    [Table("semt")]
+    public partial class semt
+    {
+        [Key]
+        [Column("id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int IL_ID { get; set; }
+        public int ILCE_ID { get; set; }
+        public string SEMT_ADI_BUYUK { get; set; }
+        public string SEMT_ADI { get; set; }
+        public string SEMT_ADI_KUCUK { get; set; }
+        public string POSTA_KODU { get; set; }
+    }
 }

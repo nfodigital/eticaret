@@ -51,5 +51,6 @@ namespace B2B.Models.Context
         public DbSet<SIPARIS_ODEMELERI> SiparisOdemeleri { get; set; }
         public DbSet<ilce> ilce { get; set; }
         public DbSet<mahalle> mahalle { get; set; }
+        public DbSet<semt> semt { get; set; }
     }
 }

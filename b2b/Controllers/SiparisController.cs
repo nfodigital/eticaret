@@ -268,11 +268,10 @@ namespace B2B.Controllers
                 Siparis.SiparisDurumu = 0;
                 Siparis.OdemeTipi = odemeTipi;
                 Siparis.SadeceTarih = DateTime.Today;
-                Siparis.SiparisNotlari = "Alıcı Adı Soyadı:" + AliciAdSoyad + " Not: " + siparisNotlari;
+                Siparis.SiparisNotlari = "Alıcı Adı Soyadı: <b> " + AliciAdSoyad + "</b><br>Not: " + siparisNotlari;
                 Siparis.SiparisiVerenAdSoyad = SiparisVerenAdSoyad;
                 Siparis.SiparisAdresi = adres;
                 Siparis.SiparisIskontoOrani = SepetHesabi.IskontoOrani;
-                Siparis.SiparisiVerenAdSoyad = Siparis.SiparisiVerenAdSoyad;
                 Siparis.ORDER_PAYMENT = uniq;
                 ctx.Siparisler.Add(Siparis);
                 ctx.SaveChanges();

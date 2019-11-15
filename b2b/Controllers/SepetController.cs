@@ -44,7 +44,13 @@ namespace B2B.Controllers
         {
             SepetDto s = new SepetDto();
             s = sepetAl();
+            ViewBag.ilce = ctx.ilce.Where(q => q.il_id == 33).ToList();
             return PartialView(s);
+        }
+        public JsonResult SemtGetir(int i)
+        {
+            var x = ctx.semt.Where(q => q.ILCE_ID == i).ToList();
+            return Json(x, JsonRequestBehavior.AllowGet);
         }
         public PartialViewResult SepetGoster()
         {
@@ -552,7 +558,7 @@ namespace B2B.Controllers
                 request.BasketId = sepetAl().SessionId;
                 request.PaymentChannel = PaymentChannel.WEB.ToString();
                 request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-                request.CallbackUrl = "http://www.cicekgider.com/Sepet/Callback"; //3d sayfasından sonra gideceği url
+                request.CallbackUrl = "https://www.cicekgider.com/Sepet/Callback"; //3d sayfasından sonra gideceği url
 
                 PaymentCard paymentCard = new PaymentCard();
                 paymentCard.CardHolderName = datas.PosBilgileri.kartSahibi;
@@ -607,7 +613,7 @@ namespace B2B.Controllers
                 {
 
                     var sepet = sepetAl();
-                    _siparis.SiparisEkle("Kredi Kartı", datas.AliciAdSoyad, datas.SiparisVerenAdSoyad + " - Telefon: " + datas.SiparisVerenTelefon, datas.Notlar, datas.AcikAdres + " Tarif: " + datas.AdresTarifi, sepet, request.ConversationId);
+                    _siparis.SiparisEkle("Kredi Kartı", datas.AliciAdSoyad, datas.SiparisVerenAdSoyad + "<br> Telefon: " + datas.SiparisVerenTelefon, datas.Notlar, datas.AcikAdres + "<br>Tarif: " + datas.AdresTarifi, sepet, request.ConversationId);
                     body = threedsInitialize.HtmlContent; //3d sayfasının htmli , viewda ekrana bastırılacak
                     veri = datas;
                     _m.ReturnMsg = body;
@@ -627,6 +633,19 @@ namespace B2B.Controllers
                 _m.ReturnMsg = "Bir iç hata oluştu. Daha sonra tekrar deneyiniz.";
             }
             return Json(_m, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [ValidateInput(false)]
+        public ActionResult Secure3d(string htmlContent)
+        {
+            htmlContent _h = new htmlContent();
+            _h.html = htmlContent;
+            return View(_h);
+        }
+        public class htmlContent
+        {
+            public string html { get; set; }
         }
 
 

@@ -17,6 +17,16 @@ $(document).ready(function () {
 $('#Semt').on('change', function () {
     console.log($(this).val());
 });
+$('#ilce').on('change', function () {
+    $('#Semt')
+        .find('option')
+        .remove();
+    $.get('/Sepet/SemtGetir/?i=' +$('option:selected', this).val(), function (d) {
+        $.each(d, function (i, v) {
+            $("#Semt").append(new Option(v.SEMT_ADI, v.SEMT_ADI));
+        });
+    });
+});
 function renewRows() {
     $.get('/Sepet/SepetHesabi', {
     }, function (d) {
@@ -32,24 +42,26 @@ function odemeYap() {
     $.ajax({
         url: "/Sepet/odemeYap",
         data: {
-            'Sehir': $('#Semt').val(), 'AcikAdres': $('#acikadres').val(), 'AdresTarifi': $('#adrestarif').val(),
-            'Notlar': $('#Notlar').val(), 'AliciAdSoyad': $('#aliciadsoyad').val(),
+            'Sehir': $('#ilce').text() + "/" + $('#semt').text(),
+            'AcikAdres': $('#acikadres').val(),
+            'AdresTarifi': $('#adrestarif').val(),
+            'Notlar': $('#Notlar').val(),
+            'AliciAdSoyad': $('#aliciadsoyad').val(),
             'SiparisVerenAdSoyad': $('#SiparisVeren').val(),
             'SiparisVerenTelefon': $('#iletisimNo').val(),
             'PosBilgileri.kartSahibi': $('#cc_name').val(),
             'PosBilgileri.kartNumarasi': $('#cc_number').val(),
             'PosBilgileri.guvenlikKodu': $('#cc_cvc').val(),
             'PosBilgileri.ay': $('#cc_exp_month').val(),
-            'PosBilgileri.yil': $('#cc_exp_year').val(), 'PosBilgileri.tutar': genelTutar, 'PosBilgileri.taksit': '',
+            'PosBilgileri.yil': $('#cc_exp_year').val(),
+            'PosBilgileri.tutar': genelTutar,
+            'PosBilgileri.taksit': '',
         },
         success: function (d) {
-            if (d.Error == "success") {
-                $('#threedpage').modal('show');
-                $('#ReturnMsg').html(d.ReturnMsg);
-            }
-            else {
-              //  window.location.href = "/Siparis/Problem"
-            }
+            window.location.href = '/Sepet/Secure3d?htmlContent=' + d.ReturnMsg;
+            //$('.modal-body').load('/Sepet/Secure3d/', { 'htmlContent': d.ReturnMsg }, function (r) {
+            //    $('#threedpage').modal('show');
+            //});
         }
     });
 }

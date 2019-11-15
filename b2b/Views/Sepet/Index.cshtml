@@ -93,51 +93,58 @@
                                     <p>Gönderim yapacağınız semt bilgisi giriniz</p>
                                     <ul class="form-list">
                                         <li>
-                                            <label class="required" for="sehir"><em>*</em>Şehir</label>
+                                            <label class="required" for="ilce"><em>*</em>İlçe</label>
                                             <div class="input-box">
-                                                <select title="Semt" class="validate-select" id="Semt" name="Semt" required="required">
-                                                    <option value="">Seçiniz</option>
-                                                    <option value="Akdeniz">Akdeniz</option>
-                                                    <option value="Toroslar">Toroslar</option>
-                                                    <option value="Yenişehir">Yenişehir</option>
-                                                    <option value="Mezitli">Mezitli</option>
+                                                <select title="ilce" class="validate-select reqSel" id="ilce" name="ilce" required="required">
+                                                    @foreach (var item in ViewBag.ilce)
+                                                    {
+                                                        <option value="@item.Id">@item.ilce_ad</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label class="required" for="Semt"><em>*</em>Semt</label>
+                                            <div class="input-box">
+                                                <select title="Semt" class="validate-select reqSel" id="Semt" name="Semt" required="required">
+                                                   
                                                 </select>
                                             </div>
                                         </li>
                                         <li>
                                             <label for="acikadres">Gönderen Adı Soyadı</label>
                                             <div class="input-box">
-                                                <input name="SiparisVeren" id="SiparisVeren" class="input-text" style="width:100%" required>
+                                                <input name="SiparisVeren" id="SiparisVeren" class="input-text reqInput" style="width:100%" required>
                                             </div>
                                         </li>
                                         <li>
                                             <label for="acikadres">Gönderene ait bir iletişim numarası</label>
                                             <div class="input-box">
-                                                <input name="iletisimNo" id="iletisimNo" class="input-text" style="width:100%" required>
+                                                <input name="iletisimNo" id="iletisimNo" class="input-text reqInput" style="width:100%" required>
                                             </div>
                                         </li>
                                         <li>
                                             <label for="acikadres">Kime Teslim Edelim? (Alıcı Ad Soyad)</label>
                                             <div class="input-box">
-                                                <textarea name="aliciadsoyad" id="aliciadsoyad" class="input-text" style="width:100%" required="required"></textarea>
+                                                <textarea name="aliciadsoyad" id="aliciadsoyad" class="input-text reqInput" style="width:100%" required="required"></textarea>
                                             </div>
                                         </li>
                                         <li>
                                             <label for="acikadres">Açık Adresi Yazın</label>
                                             <div class="input-box">
-                                                <textarea name="acikadres" id="acikadres" class="input-text" style="width:100%" required="required"></textarea>
+                                                <textarea name="acikadres" id="acikadres" class="input-text reqInput" style="width:100%" required="required"></textarea>
                                             </div>
                                         </li>
                                         <li>
                                             <label for="adrestarif">Adresi tarif ediniz</label>
                                             <div class="input-box">
-                                                <input type="text" name="adrestarif" id="adrestarif" class="input-text" required="required">
+                                                <input type="text" name="adrestarif" id="adrestarif" class="input-text reqInput" required="required">
                                             </div>
                                         </li>
                                         <li>
                                             <label for="adrestarif">Çiçeğinize not ekleyin</label>
                                             <div class="input-box">
-                                                <textarea name="Notlar" id="Notlar" class="input-text" style="width:100%"></textarea>
+                                                <textarea name="Notlar" id="Notlar" class="input-text reqQue" style="width:100%"></textarea>
                                             </div>
                                         </li>
                                     </ul>
