@@ -58,10 +58,10 @@ function odemeYap() {
             'PosBilgileri.taksit': '',
         },
         success: function (d) {
-            window.location.href = '/Sepet/Secure3d?htmlContent=' + d.ReturnMsg;
-            //$('.modal-body').load('/Sepet/Secure3d/', { 'htmlContent': d.ReturnMsg }, function (r) {
-            //    $('#threedpage').modal('show');
-            //});
+            var result =encodeURIComponent(d.ReturnMsg);
+            var url = '/Sepet/Secure3d?htmlContent=' + result;
+            window.location.replace(url);
+
         }
     });
 }
