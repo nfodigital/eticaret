@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "KategoriEkle";
+    Layout = "~/Views/_AdminMaster.cshtml";
+}
+
+
+<div class="panel">
+
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="Kategori" class="control-label">Kategori Adı</label>
+                    <input type="text" class="form-control formCtrl" id="KategoriBaslik" name="KategoriBaslik" placeholder="Kategori Adı Giriniz" required="required" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="KategoriUst" class="control-label">Kategori Şuna Ait</label>
+                    <select class="form-control" id="KategoriUst">
+                        <option value="0">Ana Dizin (Herhangi bir üst Kategoriye ait değil)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="Kategori" class="control-label">Kategori Sıra</label>
+                    <input type="number" class="form-control formCtrl" id="KategoriSira" name="KategoriSira" placeholder="Kategori Sırası" required="required" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="KategoriUst" class="control-label">Kategori Göster</label>
+                    <select class="form-control" id="KategoriGoster">
+                        <option value="1">Evet</option>
+                        <option value="0">Hayır</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group pull-right m-t-15">
+            <button type="button" class="btn btn-default" id="kategoriEkle" aria-expanded="false" href="#">Kategori Ekle</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $.get('/Admin/KategoriVer',
+        function (d) {
+            $.each(d, function (i, val) {
+                $('#KategoriUst').append("<option value=" + d[i].Id + ">" + d[i].KategoriBaslik + "</option>")
+            });
+        });
+</script>
+
+<script>
+    $('#kategoriEkle').click(function () {
+
+        $.ajax({
+            url: "/Admin/AddKategori",
+            type: "POST",
+            data: {
+                'KategoriBaslik': $('#KategoriBaslik').val(),
+                'KategoriUst': $('#KategoriUst option:selected').val(),
+                'KategoriSira': $('#KategoriSira').val(),
+                'KategoriGoster': parseInt($('#KategoriGoster option:selected').val()),
+            },
+            success: function (d) {
+                if (d.Error == "success") {
+                    swal('Başarılı', d.ReturnMsg, 'success');
+                } else {
+                    swal('Hata', d.ReturnMsg, 'error');
+                }
+            }
+
+        });
+
+    });
+</script>
+
+<!-- Sweet-Alert  -->
+<script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+<script src="/assets/pages/jquery.sweet-alert.init.js"></script>

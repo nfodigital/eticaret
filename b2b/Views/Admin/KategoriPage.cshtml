@@ -1,5 +1,89 @@
-﻿@{
-    ViewBag.Title = "KategoriPage";
-    Layout = "~/Views/_AdminMaster.cshtml";
-}
+﻿
+    @{
+        ViewBag.Title = "MarkaPage";
+        Layout = "~/Views/_AdminMaster.cshtml";
+    }
 
+    <div class="row">
+        <div class="col-sm-12">
+          
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/Admin/Index">Ana sayfa</a>
+                </li>
+            </ol>
+
+        </div>
+
+    </div>
+    <!-- Page-Title -->
+
+    <div class="panel">
+
+        <div class="panel-body">
+
+            <div class="">
+                <table class="table table-actions-bar dataTable table-striped table-bordered" id="Table1">
+                    <thead>
+                        <tr>
+                            <th>Kategori Baslik</th>
+                            <th>Eylemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="@item.Id">
+                                <td>@item.KategoriBaslik</td>
+                                <td>@item.KategoriGoster</td>
+                                <td class="actions">
+                                    <a class="btn btn-icon waves-effect waves-light btn-warning" href="/Admin/ChangeKategori/@item.Id"> <i class="fa fa-pencil"></i> </a>
+                                    <a class="btn btn-icon waves-effect waves-light btn-danger" onclick="javascript: sil(@item.Id)"> <i class="fa fa-trash-o"></i> </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- end: page -->
+
+    </div> <!-- end Panel -->
+
+
+  
+    <!-- Datatable js -->
+    <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="/assets/plugins/datatables/buttons.print.min.js"></script>
+    <!-- Data table init -->
+    <script src="/assets/pages/datatables.init.js"></script>
+    <script type="text/javascript">
+        TableManageButtons.init();
+    </script>
+
+    <script>
+
+        function sil(id) {
+            $.ajax({
+                async: false, type: "GET", url: 'Admin/DeleteKategori', data: { 'id': id, },
+                success: function (d) {
+                    swal("Bilgi!", d.ReturnMsg, d.Error);
+                    if (d.Error == "success") {
+                        $('#' + id).remove();
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Sweet-Alert  -->
+    <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assets/pages/jquery.sweet-alert.init.js"></script>

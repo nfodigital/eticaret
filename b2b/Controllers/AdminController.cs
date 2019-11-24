@@ -540,8 +540,29 @@ namespace B2B.Controllers
         [AuthorizeUser(Roles = ("su"))]
         public ActionResult KategoriPage()
         {
+            List<CATEGORIES> kategoriler = ctx.Kategoriler.ToList();
+            return View(kategoriler);
+        }
+
+        [AuthorizeUser(Roles = ("su"))]
+        public ActionResult KategoriEkle()
+        {
             return View();
         }
+
+        [AuthorizeUser(Roles = ("su"))]
+        public ActionResult KategoriDuzenle(int id)
+        {
+            CATEGORIES kategori = ctx.Kategoriler.FirstOrDefault(q => q.Id == id);
+
+            if (kategori==null)
+            {
+                return RedirectToAction("KategoriPage","Admin");
+            }
+
+            return View(kategori);
+        }
+
         [AuthorizeUser(Roles = ("su"))]
         public ActionResult MarkaPage()
         {
@@ -559,6 +580,125 @@ namespace B2B.Controllers
             BRANDS Brand = ctx.Markalar.SingleOrDefault(q => q.Id == Id);
             return PartialView(Brand);
         }
+
+        
+
+
+
+        [AuthorizeUser(Roles = ("su"))]
+        public JsonResult AddKategori(CATEGORIES kategori)
+        {
+            MethodStatusDto Method = new MethodStatusDto();
+            try
+            {
+                if (kategori!=null)
+                {
+                    ctx.Kategoriler.Add(kategori); ctx.SaveChanges();
+                }
+                
+
+                Method.Error = "success"; Method.ReturnMsg = "Kategori eklendi"; Method.ReturnValue = kategori.Id;
+            }
+            catch (Exception e)
+            {
+                Method.Error = "error"; Method.ReturnMsg = e.Message; Method.ReturnValue = 0;
+            }
+            return Json(Method, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [AuthorizeUser(Roles = ("su"))]
+        public JsonResult ChangeKategori(CATEGORIES kategori)
+        {
+            MethodStatusDto Method = new MethodStatusDto();
+            try
+            {
+                CATEGORIES oldKategori = ctx.Kategoriler.FirstOrDefault(q => q.Id == kategori.Id);
+                if (oldKategori != null)
+                {
+                    oldKategori.KategoriBaslik = kategori.KategoriBaslik;
+                    oldKategori.KategoriGoster = kategori.KategoriGoster;
+                    oldKategori.KategoriSira = kategori.KategoriSira;
+                    oldKategori.KategoriUst = kategori.KategoriUst;
+                    ctx.SaveChanges();
+                    Method.Error = "success"; Method.ReturnMsg = "Kategori düzenlendi"; Method.ReturnValue = kategori.Id;
+                }
+                else
+                {
+                    Method.Error = "error"; Method.ReturnMsg = "Kategori bulunamadı"; Method.ReturnValue = kategori.Id;
+
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                Method.Error = "error"; Method.ReturnMsg = e.Message; Method.ReturnValue = 0;
+            }
+            return Json(Method, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [AuthorizeUser(Roles = ("su"))]
+        public JsonResult DeleteKategori(int id)
+        {
+            MethodStatusDto Method = new MethodStatusDto();
+            try
+            {
+                CATEGORIES kategori = ctx.Kategoriler.FirstOrDefault(q => q.Id == id);
+                if (kategori!=null)
+                {
+                    ctx.Kategoriler.Remove(kategori);
+                    ctx.SaveChanges();
+                    Method.Error = "success"; Method.ReturnMsg = "Kategori silindi"; Method.ReturnValue = kategori.Id;
+                }
+                else
+                {
+                    Method.Error = "error"; Method.ReturnMsg = "Kategori bulunamadı"; Method.ReturnValue = kategori.Id;
+
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                Method.Error = "error"; Method.ReturnMsg = e.Message; Method.ReturnValue = 0;
+            }
+            return Json(Method, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [AuthorizeUser(Roles = ("su"))]
+        public JsonResult KategoriSil(int id)
+        {
+            MethodStatusDto Method = new MethodStatusDto();
+            try
+            {
+                CATEGORIES kategori = ctx.Kategoriler.SingleOrDefault(q => q.Id == id);
+                ctx.Kategoriler.Remove(kategori); ctx.SaveChanges();
+
+                Method.Error = "success"; Method.ReturnMsg = "Kategori Silindi"; Method.ReturnValue = kategori.Id;
+            }
+            catch (Exception e)
+            {
+                Method.Error = "error"; Method.ReturnMsg = e.Message; Method.ReturnValue = 0;
+            }
+            return Json(Method, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        public JsonResult KategoriVer()
+        {
+            List<CATEGORIES> categories = ctx.Kategoriler.OrderBy(q => q.KategoriBaslik).ToList();
+            return Json(categories, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         [AuthorizeUser(Roles = ("su"))]
         public JsonResult MarkaVer(int id)
         {

@@ -433,6 +433,8 @@
     <Content Include="Views\Home\Mesafeli.cshtml" />
     <Content Include="Views\Admin\SYaz.cshtml" />
     <Content Include="Views\Sepet\Secure3d.cshtml" />
+    <Content Include="Views\Admin\KategoriEkle.cshtml" />
+    <Content Include="Views\Admin\KategoriDuzenle.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
